@@ -1,0 +1,13 @@
+{
+  "analysis_crs": "EPSG:26916",
+  "output_crs": "EPSG:4326",
+  "field_aliases": {
+    "geoid": "Census block-group GEOID",
+    "total_accessibility_score": "Total accessibility score",
+    "transit_access_score": "Transit access score",
+    "service_access_score": "Essential service score",
+    "transit_stop_count": "Nearby transit stops",
+    "service_categories": "Available service categories",
+    "status_flags": "Data status flags"
+  }
+}
