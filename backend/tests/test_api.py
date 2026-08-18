@@ -65,7 +65,10 @@ def test_database_url_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("DATABASE_URL")
     monkeypatch.setenv("POSTGRES_PASSWORD", "local-only")
     monkeypatch.setenv("POSTGRES_HOST", "localhost")
-    assert database_url() == "postgresql://indy_accessibility:local-only@localhost:5432/indy_accessibility"
+    assert (
+        database_url()
+        == "postgresql://indy_accessibility:local-only@localhost:5432/indy_accessibility"
+    )
     monkeypatch.delenv("POSTGRES_PASSWORD")
     with pytest.raises(RuntimeError, match="DATABASE_URL"):
         database_url()
