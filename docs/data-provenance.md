@@ -72,12 +72,16 @@ original address and school identifier.
 
 ### Libraries
 
-The Indianapolis Public Library locations page is the official current source
-and lists branch names, addresses, and contact details. It is HTML rather than
-a data API and does not state an open-data license. Acquisition therefore
-caches the page for local processing and commits only a synthetic HTML fixture.
-The Library Services Center and mobile services need an explicit inclusion rule
-before analysis, and addresses require geocoding.
+The Indianapolis Public Library locations page is the preferred local
+cross-check and publicly renders current branch names and addresses. Its raw
+downloaded HTML did not contain those rendered address records during
+verification, so it was not selected as the reproducible production source.
+Instead, the catalog uses Indiana State Library's Library Locations of Indiana
+2025 point inventory published by IndianaMap. It has branch, address, library
+type, update, and geometry fields. The statewide layer includes non-public
+library types and predates the analysis, so later ETL must spatially select
+Marion County, define eligible public-service locations, and cross-check them
+against the current official IndyPL page.
 
 ### Fire stations
 

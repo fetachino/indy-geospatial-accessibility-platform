@@ -216,35 +216,37 @@
       }
     },
     {
-      "id": "indypl_locations",
-      "name": "Indianapolis Public Library Locations",
-      "purpose": "Provides the official current branch names and street addresses for later library-access analysis.",
-      "source_organization": "Indianapolis Public Library",
-      "source_page_url": "https://www.indypl.org/locations",
-      "source_url": "https://www.indypl.org/locations",
-      "retrieval_method": "http_get_html",
+      "id": "indiana_library_locations_2025",
+      "name": "Library Locations of Indiana 2025",
+      "purpose": "Provides Indiana State Library-maintained branch names, types, addresses, update fields, and point geometry for later library-access analysis.",
+      "source_organization": "Indiana State Library, published by the Indiana Geographic Information Office (IndianaMap)",
+      "source_page_url": "https://gisdata.in.gov/server/rest/services/Hosted/Library_Locations_of_Indiana_2025/FeatureServer/0",
+      "source_url": "https://gisdata.in.gov/server/rest/services/Hosted/Library_Locations_of_Indiana_2025/FeatureServer/0/query?where=1%3D1&outFields=objectid%2Cuser_library_name%2Cuser_branch_name%2Cbranch%2Cfulladdress%2Cstreetaddress%2Cuser_city%2Cuser_state%2Cuser_zip%2Cuser_updated%2Ctype%2Cevergreen%2Cphone%2Cwebsite&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieval_method": "http_get",
       "retrieval_date": "2026-08-18",
       "license": {
-        "name": "Copyright Indianapolis Public Library; no open-data license stated",
-        "url": "https://www.indypl.org/locations",
-        "notes": "Cache the official page for local processing only. Commit no copied production location list; confirm reuse terms before publishing a derived location layer."
+        "name": "Indiana State Library / Indiana Geographic Information Office copyright and as-is service metadata",
+        "url": "https://gisdata.in.gov/server/rest/services/Hosted/Library_Locations_of_Indiana_2025/FeatureServer?f=pjson",
+        "notes": "The service identifies Indiana State Library and IGIO copyright. Cache locally, retain attribution, and confirm downstream republication terms before release."
       },
-      "geographic_coverage": "Indianapolis, Lawrence, and Beech Grove library service locations",
-      "crs": "Not applicable; the page publishes street addresses, not coordinates",
-      "important_fields": ["branch name", "street address", "city", "state", "ZIP code", "phone"],
-      "expected_format": "html",
-      "cache_filename": "indypl_locations.html",
+      "geographic_coverage": "State of Indiana; later processing will spatially select Marion County and apply a public-library inclusion rule",
+      "crs": "EPSG:4326 in requested GeoJSON; source layer reports Web Mercator auxiliary sphere (WKID 102100 / latest WKID 3857)",
+      "important_fields": ["objectid", "user_library_name", "user_branch_name", "branch", "fulladdress", "user_city", "user_zip", "user_updated", "type"],
+      "expected_format": "geojson",
+      "cache_filename": "indiana_library_locations_2025.geojson",
       "authoritative_status": "authoritative",
       "known_limitations": [
-        "The page is human-oriented HTML rather than a versioned data API and its markup may change.",
-        "It includes the Library Services Center and Bookmobile information that require an explicit inclusion rule later.",
-        "Addresses require geocoding and the page can reflect temporary service changes."
+        "The statewide layer includes public, academic, school, special, and other library types; later ETL must define the public-service category explicitly.",
+        "The dataset was developed in May 2025 and may not reflect later openings, closures, or temporary service changes.",
+        "The official Indianapolis Public Library locations page remains the preferred local cross-check but its downloaded HTML did not contain the rendered address records during verification."
       ],
-      "manual_fallback": "Open the official locations page, use the browser's Save Page command to save the complete HTML as indypl_locations.html, and run the CLI with --validate-existing.",
+      "manual_fallback": "Open the IndianaMap layer URL, choose Query, request all records with geometry and output spatial reference 4326, select GeoJSON, and save as indiana_library_locations_2025.geojson. Cross-check selected Indianapolis branches against https://www.indypl.org/locations.",
       "validation": {
-        "kind": "html",
-        "required_text": ["Central Library", "Indianapolis, IN", "Branch Details"],
-        "minimum_records": 20
+        "kind": "geojson",
+        "required_fields": ["objectid", "user_library_name", "user_branch_name", "fulladdress", "user_city", "user_zip", "user_updated", "type"],
+        "geometry_types": ["Point"],
+        "minimum_records": 1,
+        "bounds": [-88.2, 37.7, -84.7, 41.9]
       }
     },
     {
