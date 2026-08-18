@@ -5,11 +5,10 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 2 establishes the PostGIS schema, migration
-> contract, projected-CRS geometry rules, and fixture ETL path. The local
-> Docker engine was unavailable during development, so live PostGIS integration
-> remains an explicitly documented follow-up. No accessibility results or
-> interactive map exists yet.
+> **Current status:** Milestone 3 establishes a configurable, proximity-based
+> accessibility baseline and reproducible exports. It is a planning-screening
+> indicator, not a walking/network result, causal measure, or policy
+> recommendation. No public API or interactive map exists yet.
 
 ## Project question
 
@@ -109,6 +108,21 @@ removes the named volume (irreversible). Set `POSTGIS_TEST_DATABASE_URL` to run
 optional integration tests; otherwise tests clearly skip that environment-only
 check. See [`docs/schema-etl.md`](docs/schema-etl.md) for schema, lineage, CRS,
 and validation details.
+
+### Accessibility analysis (Milestone 3)
+
+After the PostGIS database is loaded, run the configurable proximity baseline
+and export a run by ID:
+
+```bash
+python -m indy_accessibility_etl analyze
+python -m indy_accessibility_etl export <run-id>
+```
+
+Outputs are written to ignored `data/processed/` files. The exact 400-meter
+transit threshold, 1,600-meter service threshold, weights, missing-category
+handling, and ACS behavior are documented in
+[`docs/accessibility-methodology.md`](docs/accessibility-methodology.md).
 
 ## Data acquisition
 

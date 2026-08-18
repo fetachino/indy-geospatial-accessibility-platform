@@ -1,0 +1,9 @@
+{
+  "configuration_version": "2026-08-18-v1",
+  "transit_threshold_m": 400,
+  "service_threshold_m": 1600,
+  "transit_target_count": 3,
+  "transit_weight": 0.4,
+  "service_weight": 0.6,
+  "service_categories": ["hospital", "grocery_store", "library", "fire_station", "school"]
+}
