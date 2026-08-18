@@ -153,6 +153,17 @@ transit threshold, 1,600-meter service threshold, weights, missing-category
 handling, and ACS behavior are documented in
 [`docs/accessibility-methodology.md`](docs/accessibility-methodology.md).
 
+### Optional ArcGIS integration (Milestone 5)
+
+The open-source PostGIS + FastAPI + React + MapLibre application remains the
+default, free, locally runnable experience. [`docs/arcgis-integration.md`](docs/arcgis-integration.md)
+provides ArcGIS Pro and ArcGIS Online runbooks, field aliases, CRS guidance,
+safe sharing practices, and Dashboard/Experience Builder configuration ideas.
+`arcgis/prepare_accessibility.py` is an optional ArcGIS Pro helper that exits
+clearly when ArcPy is unavailable; no ArcGIS Pro execution or ArcGIS Online
+publication is claimed. An ArcGIS Maps SDK provider remains a documented
+future design requiring user-supplied Esri access.
+
 ## Data acquisition
 
 List cataloged sources and their authority status:
@@ -242,7 +253,7 @@ network is methodologically appropriate and attribution requirements are met.
 | **2 — Spatial database and ETL (in progress)** | PostGIS Compose service, cached-source production ETL for supported Milestone 1 files, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and fixture/integration tests. School address geocoding and ACS acquisition remain explicit source limitations. |
 | **3 — Accessibility analysis** | Transparent proximity baseline, population normalization, composite score, spatial edge-case tests, documented exports, and—if feasible—a separately described network comparison complete. |
 | **4 — API and web map** | Versioned API and responsive interactive map expose real results with filters, legends, accessible controls, loading/error states, and backend/frontend tests. |
-| **5 — Esri integration** | Optional ArcGIS Pro/ArcPy workflow and safe publishing path documented; ArcGIS web adapter implemented only if licensing and credential handling are reproducible. |
+| **5 — Esri integration** | Optional ArcGIS Pro/Online runbooks, ArcGIS-ready metadata, and graceful ArcPy helper documented; no Esri account or licensed execution claimed. |
 | **6 — Portfolio release** | Verified clean-environment commands, screenshots, architecture diagram, technical case study, findings and limitations, user guide, release notes, measured benchmarks if any, and evidence-based résumé bullets complete. |
 
 ## Known limitations
