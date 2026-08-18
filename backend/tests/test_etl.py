@@ -21,7 +21,8 @@ def test_geometry_projection_and_repair() -> None:
     from shapely.geometry import Point, Polygon
 
     projected = project_geometry(Point(-86.16, 39.77), 4326)
-    assert projected.x != -86.16
+    assert projected.geom_type == "Point"
+    assert projected.centroid.x != -86.16
     assert (
         validate_geometry(
             Polygon([(0, 0), (10, 10), (0, 10), (10, 0), (0, 0)]),

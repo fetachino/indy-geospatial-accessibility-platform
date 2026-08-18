@@ -35,6 +35,8 @@ def test_postgis_schema_and_postgis_extension() -> None:
 def test_fixture_load_is_transactional_and_repeatable() -> None:
     from indy_accessibility_etl.fixture import load_fixture_to_database
 
-    first = load_fixture_to_database(DATABASE_URL)
-    second = load_fixture_to_database(DATABASE_URL)
+    url = DATABASE_URL
+    assert url is not None
+    first = load_fixture_to_database(url)
+    second = load_fixture_to_database(url)
     assert first["loaded"] == second["loaded"] == 1
