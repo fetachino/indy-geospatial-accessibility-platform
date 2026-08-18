@@ -80,7 +80,7 @@ def feature_collection(rows: list[tuple[Any, ...]]) -> GeoJSONFeatureCollection:
 )
 def latest_run() -> RunMetadata:
     try:
-        with next(connection()) as conn:
+        with connection() as conn:
             row = conn.execute(
                 "SELECT run_id, calculation_version, configuration_version, "
                 "configuration_hash, status, population_available, row_count, "
@@ -113,7 +113,7 @@ def latest_run() -> RunMetadata:
 def latest_summary() -> RunSummary:
     run = latest_run()
     try:
-        with next(connection()) as conn:
+        with connection() as conn:
             stats = conn.execute(
                 "SELECT min(total_accessibility_score), "
                 "max(total_accessibility_score), "
@@ -193,7 +193,7 @@ def block_groups(
             )
             params.extend(bounds)
         params.extend([limit, offset])
-        with next(connection()) as conn:
+        with connection() as conn:
             rows = conn.execute(
                 "SELECT json_build_object('type','Feature','geometry', "
                 "ST_AsGeoJSON(ST_Transform(geometry,4326))::json, "
@@ -221,7 +221,7 @@ def block_group_detail(geoid: str) -> dict[str, Any]:
         )
     try:
         run = latest_run()
-        with next(connection()) as conn:
+        with connection() as conn:
             row = conn.execute(
                 "SELECT ST_AsGeoJSON(ST_Transform(geometry,4326)), geoid, "
                 "transit_stop_count, transit_access_score, service_access_score, "
@@ -266,7 +266,7 @@ def transit_stops(
         params.extend(bounds)
     params.append(limit)
     try:
-        with next(connection()) as conn:
+        with connection() as conn:
             rows = conn.execute(
                 "SELECT ST_AsGeoJSON(ST_Transform(geometry,4326)) FROM transit.stops "
                 + clause
@@ -306,7 +306,7 @@ def services(
         params.extend(bounds)
     params.append(limit)
     try:
-        with next(connection()) as conn:
+        with connection() as conn:
             rows = conn.execute(
                 "SELECT ST_AsGeoJSON(ST_Transform(geometry,4326)) "
                 "FROM services.service_locations WHERE service_type=%s"

@@ -95,7 +95,9 @@ uvicorn indy_accessibility_api.main:app --reload
 cd frontend && npm ci && npm run dev
 ```
 
-The API is documented at `/docs`; endpoint contracts and limitations are in
+The API uses the same `DATABASE_URL` as ETL when set, or derives one from
+`POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, and
+`POSTGRES_PASSWORD`. It is documented at `/docs`; endpoint contracts and limitations are in
 [`docs/api-web-map.md`](docs/api-web-map.md).
 
 ### PostGIS and ETL (Milestone 2)

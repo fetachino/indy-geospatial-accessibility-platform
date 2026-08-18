@@ -1,5 +1,6 @@
 from typing import Any
 
+import psycopg
 import pytest
 from fastapi.testclient import TestClient
 
@@ -62,6 +63,10 @@ def test_database_url_configuration(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DATABASE_URL", "postgresql://example")
     assert database_url() == "postgresql://example"
     monkeypatch.delenv("DATABASE_URL")
+    monkeypatch.setenv("POSTGRES_PASSWORD", "local-only")
+    monkeypatch.setenv("POSTGRES_HOST", "localhost")
+    assert database_url() == "postgresql://indy_accessibility:local-only@localhost:5432/indy_accessibility"
+    monkeypatch.delenv("POSTGRES_PASSWORD")
     with pytest.raises(RuntimeError, match="DATABASE_URL"):
         database_url()
 
@@ -76,7 +81,21 @@ def test_connection_context(monkeypatch: pytest.MonkeyPatch) -> None:
 
     monkeypatch.setenv("DATABASE_URL", "postgresql://example")
     monkeypatch.setattr(db.psycopg, "connect", lambda _url: FakeConnection())  # type: ignore[attr-defined]
-    assert next(db.connection()) is not None
+    with db.connection() as conn:
+        assert conn is not None
+
+
+def test_connection_logs_and_reraises_database_error(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("DATABASE_URL", "postgresql://example")
+
+    def fail_connect(_url: str) -> Any:
+        raise psycopg.OperationalError("connection refused")
+
+    monkeypatch.setattr(psycopg, "connect", fail_connect)
+    with pytest.raises(psycopg.OperationalError), db.connection():
+        pass
 
 
 def test_client_safe_database_error() -> None:
@@ -84,7 +103,13 @@ def test_client_safe_database_error() -> None:
 
 
 def test_api_features_and_summary_with_fake_database(monkeypatch) -> None:  # type: ignore[no-untyped-def]
-    monkeypatch.setattr(main, "connection", lambda: iter([FakeConnection()]))
+    from contextlib import contextmanager
+
+    @contextmanager
+    def fake_connection() -> Any:
+        yield FakeConnection()
+
+    monkeypatch.setattr(main, "connection", fake_connection)
     client = TestClient(main.app)
     assert client.get("/api/v1/runs/latest").status_code == 200
     assert client.get("/api/v1/runs/latest/summary").status_code == 200

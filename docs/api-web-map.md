@@ -16,7 +16,9 @@ uvicorn indy_accessibility_api.main:app --reload
 cd frontend && npm ci && npm run dev
 ```
 
-Set `DATABASE_URL`, `CORS_ORIGINS`, and `VITE_API_BASE_URL` as needed. Optionally
+Set `DATABASE_URL`, `CORS_ORIGINS`, and `VITE_API_BASE_URL` as needed. If
+`DATABASE_URL` is omitted, the API derives the same connection URL as ETL from
+the `POSTGRES_*` variables (including `POSTGRES_PASSWORD`). Optionally
 set `VITE_MAP_TILE_URL` to a public raster tile template with attribution. No
 API key or paid map provider is required; raw data and credentials remain
 outside Git.
