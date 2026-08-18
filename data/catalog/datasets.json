@@ -1,0 +1,318 @@
+{
+  "catalog_version": "1.0",
+  "project_geography": {
+    "name": "Marion County, Indiana",
+    "state_fips": "18",
+    "county_fips": "097"
+  },
+  "last_verified": "2026-08-18",
+  "datasets": [
+    {
+      "id": "marion_county_boundary",
+      "name": "Marion County Indiana Boundary",
+      "purpose": "Defines the project study-area boundary and supports clipping and coverage checks.",
+      "source_organization": "City of Indianapolis and Marion County",
+      "source_page_url": "https://gis.indy.gov/server/rest/services/OpenData/OpenData_Boundaries/FeatureServer/9",
+      "source_url": "https://gis.indy.gov/server/rest/services/OpenData/OpenData_Boundaries/FeatureServer/9/query?where=1%3D1&outFields=OBJECTID%2CSUM_ACRES%2CDISPLAY&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "No explicit license supplied in ArcGIS service metadata",
+        "url": "https://gis.indy.gov/server/rest/services/OpenData/OpenData_Boundaries/FeatureServer/9?f=pjson",
+        "notes": "Publicly queryable official service. Raw responses are cached locally and are not redistributed by this repository; confirm downstream republication terms before release."
+      },
+      "geographic_coverage": "Marion County, Indiana",
+      "crs": "EPSG:4326 in requested GeoJSON; source service reports WKID 2244 / latest WKID 2965",
+      "important_fields": ["OBJECTID", "SUM_ACRES", "DISPLAY"],
+      "expected_format": "geojson",
+      "cache_filename": "marion_county_boundary.geojson",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "The service does not publish a clear open-data license in its layer metadata.",
+        "This administrative boundary is not itself a neighborhood reporting geography."
+      ],
+      "manual_fallback": "Open the source page URL, choose Query, request all records with geometry and output spatial reference 4326, select GeoJSON output, and save the response as marion_county_boundary.geojson.",
+      "validation": {
+        "kind": "geojson",
+        "required_fields": ["OBJECTID", "SUM_ACRES", "DISPLAY"],
+        "geometry_types": ["Polygon", "MultiPolygon"],
+        "minimum_records": 1,
+        "bounds": [-87.0, 39.4, -85.7, 40.2]
+      }
+    },
+    {
+      "id": "census_block_groups_2024",
+      "name": "2024 TIGER/Line Indiana Census Block Groups",
+      "purpose": "Provides stable small-area geography and GEOIDs for later population joins and neighborhood-scale reporting comparisons.",
+      "source_organization": "U.S. Census Bureau",
+      "source_page_url": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.2024.html",
+      "source_url": "https://www2.census.gov/geo/tiger/TIGER2024/BG/tl_2024_18_bg.zip",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "U.S. Census Bureau public data",
+        "url": "https://www.census.gov/topics/research/research-transparency-public-access/open-data.html",
+        "notes": "Census Bureau employee-created data generally are not subject to U.S. copyright; cite the Census Bureau and the vintage."
+      },
+      "geographic_coverage": "State of Indiana; later processing will select county FIPS 097",
+      "crs": "EPSG:4269 (NAD83) as distributed by TIGER/Line",
+      "important_fields": ["STATEFP", "COUNTYFP", "TRACTCE", "BLKGRPCE", "GEOID", "NAMELSAD", "ALAND", "AWATER"],
+      "expected_format": "shapefile_zip",
+      "cache_filename": "tl_2024_18_bg.zip",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "Block groups are Census statistical areas, not resident-defined neighborhoods.",
+        "Statewide data require a later county filter and projected-CRS transformation before distance or area analysis."
+      ],
+      "manual_fallback": "Visit the TIGER/Line 2024 page, open Census Block Groups, download the Indiana file tl_2024_18_bg.zip, and place it in the configured raw cache with that exact filename.",
+      "validation": {
+        "kind": "shapefile_zip",
+        "required_members": ["tl_2024_18_bg.shp", "tl_2024_18_bg.shx", "tl_2024_18_bg.dbf", "tl_2024_18_bg.prj"],
+        "minimum_bytes": 1000
+      }
+    },
+    {
+      "id": "indygo_gtfs",
+      "name": "IndyGo Static GTFS Schedule",
+      "purpose": "Supplies official transit stops, routes, trips, stop times, service calendars, and shapes for later transit-access and network-method work.",
+      "source_organization": "Indianapolis Public Transportation Corporation (IndyGo)",
+      "source_page_url": "https://www.indygo.net/about-indygo/developer-content/",
+      "source_url": "https://realtime.indygo.net/InfoPoint/gtfs-zip.ashx",
+      "retrieval_method": "http_get_subject_to_terms",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "IndyGo Developer Content Terms of Use",
+        "url": "https://www.indygo.net/about-indygo/developer-content/gtfs-data-request/",
+        "notes": "Use is subject to IndyGo terms, including as-is availability, copyright, termination, and mark restrictions. The repository stores no production feed."
+      },
+      "geographic_coverage": "IndyGo scheduled service in Indianapolis and surrounding service area",
+      "crs": "EPSG:4326 coordinates in stops.txt and shapes.txt per GTFS",
+      "important_fields": ["stop_id", "stop_name", "stop_lat", "stop_lon", "route_id", "trip_id", "service_id", "arrival_time", "departure_time"],
+      "expected_format": "gtfs_zip",
+      "cache_filename": "indygo_gtfs.zip",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "The official developer page requires review and acceptance of terms through a request form even though the operational static-feed endpoint was publicly reachable when verified.",
+        "The feed is a changing schedule snapshot and does not prove service operated as scheduled.",
+        "Feed validity dates must be checked at analysis time."
+      ],
+      "manual_fallback": "Review the terms and submit IndyGo's GTFS Data Request form at the license URL. Save the supplied unmodified ZIP as indygo_gtfs.zip in the configured cache, then run the CLI with --validate-existing.",
+      "validation": {
+        "kind": "gtfs_zip",
+        "required_members": ["agency.txt", "stops.txt", "routes.txt", "trips.txt", "stop_times.txt"],
+        "required_fields": {
+          "agency.txt": ["agency_name", "agency_url", "agency_timezone"],
+          "stops.txt": ["stop_id", "stop_name", "stop_lat", "stop_lon"],
+          "routes.txt": ["route_id", "route_short_name", "route_type"],
+          "trips.txt": ["route_id", "service_id", "trip_id"],
+          "stop_times.txt": ["trip_id", "arrival_time", "departure_time", "stop_id", "stop_sequence"]
+        },
+        "minimum_records": 1,
+        "bounds": [-87.0, 39.4, -85.7, 40.2]
+      }
+    },
+    {
+      "id": "hospital_locations_2023",
+      "name": "IndianaMap Hospital Locations 2023 — Marion County",
+      "purpose": "Provides geocoded hospital facilities for the hospital-access service category.",
+      "source_organization": "Indiana Geographic Information Office (IndianaMap), republishing HIFLD-derived data",
+      "source_page_url": "https://gisdata.in.gov/portal/home/item.html?id=726429746f0c4185b1ef07760e4409b9",
+      "source_url": "https://gisdata.in.gov/server/rest/services/Hosted/Hospitals_2023/FeatureServer/0/query?where=county%3D%27MARION%27&outFields=id%2Cname%2Caddress%2Ccity%2Cstate%2Czip%2Ctype%2Cstatus%2Ccounty%2Ccountyfips%2Clatitude%2Clongitude%2Csource%2Csourcedate%2Cval_method%2Cval_date&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "Indiana Geographic Information Office limitation of warranties and liability",
+        "url": "https://www.arcgis.com/sharing/rest/content/items/726429746f0c4185b1ef07760e4409b9?f=json",
+        "notes": "Provided as-is; the user assumes risk and IGIO disclaims liability. Retain source attribution and SOURCE fields."
+      },
+      "geographic_coverage": "Hospital records whose COUNTY field is MARION",
+      "crs": "EPSG:4326",
+      "important_fields": ["id", "name", "address", "type", "status", "countyfips", "latitude", "longitude", "source", "sourcedate", "val_method", "val_date"],
+      "expected_format": "geojson",
+      "cache_filename": "hospital_locations_2023_marion.geojson",
+      "authoritative_status": "authoritative_aggregator",
+      "known_limitations": [
+        "The item states that facilities absent from its source systems are not included.",
+        "It was republished in 2026 under a 2023 dataset title and may not represent current openings or closures.",
+        "Nursing homes and health centers are explicitly excluded."
+      ],
+      "manual_fallback": "Open the IndianaMap item, export the layer to GeoJSON, retain records where COUNTY equals MARION, and save as hospital_locations_2023_marion.geojson.",
+      "validation": {
+        "kind": "geojson",
+        "required_fields": ["id", "name", "address", "county", "latitude", "longitude", "source"],
+        "geometry_types": ["Point"],
+        "minimum_records": 1,
+        "bounds": [-87.0, 39.4, -85.7, 40.2],
+        "field_equals": {"county": "MARION"}
+      }
+    },
+    {
+      "id": "snap_grocery_retailers_2005_2025",
+      "name": "USDA Historical SNAP Retailer Locator Data 2005–2025",
+      "purpose": "Provides a federal fallback from which active SNAP-authorized supermarkets and grocery stores can be selected for later grocery-access analysis.",
+      "source_organization": "U.S. Department of Agriculture, Food and Nutrition Service",
+      "source_page_url": "https://www.fns.usda.gov/snap/retailer-locator/data",
+      "source_url": "https://www.fns.usda.gov/sites/default/files/resource-files/snap-retailer-locator-data2005-2025.zip",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "U.S. federal public data; no dataset-specific license stated on source page",
+        "url": "https://www.fns.usda.gov/snap/retailer-locator/data",
+        "notes": "Cite USDA FNS. The repository does not redistribute the production ZIP."
+      },
+      "geographic_coverage": "United States; later processing will filter Marion County, Indiana and active grocery-relevant store types",
+      "crs": "EPSG:4326 latitude/longitude columns",
+      "important_fields": ["Record ID", "Store Name", "Store Type", "City", "State", "Zip Code", "County", "Latitude", "Longitude", "Authorization Date", "End Date"],
+      "expected_format": "csv_zip",
+      "cache_filename": "snap_retailers_2005_2025.zip",
+      "authoritative_status": "authoritative_fallback",
+      "known_limitations": [
+        "This is a fallback because no verified local or state grocery-location dataset with clear public access was found.",
+        "SNAP authorization is not equivalent to a complete inventory of grocery stores.",
+        "The historical file requires filtering by End Date and store type; convenience stores must not be treated automatically as full-service grocery access.",
+        "The source is current only through December 31, 2025."
+      ],
+      "manual_fallback": "Open the USDA source page, download Historical SNAP Retailer Locator Data (.zip), and save the unmodified file as snap_retailers_2005_2025.zip in the configured cache.",
+      "validation": {
+        "kind": "csv_zip",
+        "required_fields": ["Record ID", "Store Name", "Store Type", "City", "State", "Zip Code", "County", "Latitude", "Longitude", "Authorization Date", "End Date"],
+        "minimum_records": 1,
+        "minimum_bytes": 1000
+      }
+    },
+    {
+      "id": "indiana_school_directory_2025_2026",
+      "name": "2025–2026 Indiana School Directory",
+      "purpose": "Provides official public and accredited non-public school names and addresses for later school-access analysis.",
+      "source_organization": "Indiana Department of Education",
+      "source_page_url": "https://www.in.gov/doe/it/data-center-and-reports/",
+      "source_url": "https://www.in.gov/doe/files/2025-2026-school-directory-2026-03-23.xlsx",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "Indiana government public record; no dataset-specific license stated",
+        "url": "https://www.in.gov/core/terms-of-use/",
+        "notes": "Do not redistribute the workbook without confirming state terms; retain IDOE attribution and retrieval date."
+      },
+      "geographic_coverage": "State of Indiana; later processing will filter COUNTY_NAME equal to Marion",
+      "crs": "Not applicable; workbook contains street addresses but no coordinates",
+      "important_fields": ["IDOE_SCHOOL_ID", "SCHOOL_NAME", "ADDRESS", "CITY", "STATE", "ZIP", "COUNTY_NAME", "LOW_GRADE", "HIGH_GRADE"],
+      "expected_format": "xlsx",
+      "cache_filename": "indiana_school_directory_2025_2026.xlsx",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "The workbook contains addresses rather than coordinates and will require a documented geocoding step later.",
+        "Public schools and accredited non-public schools are stored on separate SCHL and NPSCHL sheets.",
+        "The file is a school-year snapshot and may not capture mid-year changes."
+      ],
+      "manual_fallback": "Open the IDOE Data Center page, select 2025-2026 Indiana School Directory under General School Information, and save the workbook as indiana_school_directory_2025_2026.xlsx in the configured cache.",
+      "validation": {
+        "kind": "xlsx",
+        "required_sheets": {
+          "SCHL": ["IDOE_SCHOOL_ID", "SCHOOL_NAME", "ADDRESS", "CITY", "STATE", "ZIP", "COUNTY_NAME", "LOW_GRADE", "HIGH_GRADE"],
+          "NPSCHL": ["IDOE_SCHOOL_ID", "SCHOOL_NAME", "ADDRESS", "CITY", "STATE", "ZIP", "COUNTY_NAME", "LOW_GRADE", "HIGH_GRADE"]
+        },
+        "minimum_records": 1
+      }
+    },
+    {
+      "id": "indypl_locations",
+      "name": "Indianapolis Public Library Locations",
+      "purpose": "Provides the official current branch names and street addresses for later library-access analysis.",
+      "source_organization": "Indianapolis Public Library",
+      "source_page_url": "https://www.indypl.org/locations",
+      "source_url": "https://www.indypl.org/locations",
+      "retrieval_method": "http_get_html",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "Copyright Indianapolis Public Library; no open-data license stated",
+        "url": "https://www.indypl.org/locations",
+        "notes": "Cache the official page for local processing only. Commit no copied production location list; confirm reuse terms before publishing a derived location layer."
+      },
+      "geographic_coverage": "Indianapolis, Lawrence, and Beech Grove library service locations",
+      "crs": "Not applicable; the page publishes street addresses, not coordinates",
+      "important_fields": ["branch name", "street address", "city", "state", "ZIP code", "phone"],
+      "expected_format": "html",
+      "cache_filename": "indypl_locations.html",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "The page is human-oriented HTML rather than a versioned data API and its markup may change.",
+        "It includes the Library Services Center and Bookmobile information that require an explicit inclusion rule later.",
+        "Addresses require geocoding and the page can reflect temporary service changes."
+      ],
+      "manual_fallback": "Open the official locations page, use the browser's Save Page command to save the complete HTML as indypl_locations.html, and run the CLI with --validate-existing.",
+      "validation": {
+        "kind": "html",
+        "required_text": ["Central Library", "Indianapolis, IN", "Branch Details"],
+        "minimum_records": 20
+      }
+    },
+    {
+      "id": "ifd_fire_stations",
+      "name": "Indianapolis Fire Department Stations",
+      "purpose": "Provides official IFD station points for later fire-station proximity analysis.",
+      "source_organization": "City of Indianapolis and Marion County, Indianapolis Fire Department",
+      "source_page_url": "https://gis.indy.gov/server/rest/services/IFD-battalions-stations/IFDBatallionsStations/FeatureServer/0",
+      "source_url": "https://gis.indy.gov/server/rest/services/IFD-battalions-stations/IFDBatallionsStations/FeatureServer/0/query?where=1%3D1&outFields=OBJECTID%2CADDRESS%2CDESC_%2CSTATION%2CBATTALION&returnGeometry=true&outSR=4326&f=geojson",
+      "retrieval_method": "http_get",
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "No explicit license supplied in ArcGIS service metadata",
+        "url": "https://gis.indy.gov/server/rest/services/IFD-battalions-stations/IFDBatallionsStations/FeatureServer/0?f=pjson",
+        "notes": "Official publicly queryable service with City copyright text. Cache locally and confirm downstream republication terms before release."
+      },
+      "geographic_coverage": "Indianapolis Fire Department stations; does not automatically include every non-IFD department in Marion County",
+      "crs": "EPSG:4326 in requested GeoJSON; source service reports WKID 2244 / latest WKID 2965",
+      "important_fields": ["OBJECTID", "ADDRESS", "DESC_", "STATION", "BATTALION"],
+      "expected_format": "geojson",
+      "cache_filename": "ifd_fire_stations.geojson",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "This layer covers IFD stations; the same service exposes non-IFD stations separately and coverage parity must be evaluated before analysis.",
+        "No explicit update date or open-data license is supplied in the layer metadata."
+      ],
+      "manual_fallback": "Open the source page URL, choose Query, request all records with geometry and output spatial reference 4326, select GeoJSON, and save as ifd_fire_stations.geojson.",
+      "validation": {
+        "kind": "geojson",
+        "required_fields": ["OBJECTID", "ADDRESS", "STATION", "BATTALION"],
+        "geometry_types": ["Point"],
+        "minimum_records": 1,
+        "bounds": [-87.0, 39.4, -85.7, 40.2]
+      }
+    },
+    {
+      "id": "acs_2024_block_group_demographics",
+      "name": "2020–2024 ACS 5-year Block Group Demographics",
+      "purpose": "Provides total population, margins of error, and household vehicle availability inputs for later population-normalized accessibility indicators.",
+      "source_organization": "U.S. Census Bureau",
+      "source_page_url": "https://api.census.gov/data/2024/acs/acs5.html",
+      "source_url": "https://api.census.gov/data/2024/acs/acs5?get=NAME%2CB01003_001E%2CB01003_001M%2CB08201_001E%2CB08201_002E&for=block%20group%3A%2A&in=state%3A18&in=county%3A097&in=tract%3A%2A&key={CENSUS_API_KEY}",
+      "retrieval_method": "http_get_with_environment_parameter",
+      "requires_environment": ["CENSUS_API_KEY"],
+      "retrieval_date": "2026-08-18",
+      "license": {
+        "name": "U.S. Census Bureau public data",
+        "url": "https://www.census.gov/topics/research/research-transparency-public-access/open-data.html",
+        "notes": "Cite the U.S. Census Bureau, ACS 2024 5-year release, variables, geography, and retrieval date."
+      },
+      "geographic_coverage": "All Census block groups in Marion County (state 18, county 097)",
+      "crs": "Not applicable; tabular data join to TIGER/Line using state, county, tract, and block group codes",
+      "important_fields": ["NAME", "B01003_001E", "B01003_001M", "B08201_001E", "B08201_002E", "state", "county", "tract", "block group"],
+      "expected_format": "census_json",
+      "cache_filename": "acs_2024_block_group_demographics.json",
+      "authoritative_status": "authoritative",
+      "known_limitations": [
+        "ACS estimates have sampling error; margins of error must remain visible in downstream interpretation.",
+        "The API returned a Missing Key HTML response during verification without a key, so automation requires a user-provided CENSUS_API_KEY even though the dataset is public.",
+        "Household vehicle availability is not a direct measure of individual transit dependence."
+      ],
+      "manual_fallback": "Request a free Census API key at https://api.census.gov/data/key_signup.html and set CENSUS_API_KEY, or use data.census.gov to download ACS 2024 5-year detailed tables B01003 and B08201 for all Marion County block groups; preserve the original download and metadata in the raw cache.",
+      "validation": {
+        "kind": "census_json",
+        "required_fields": ["NAME", "B01003_001E", "B01003_001M", "B08201_001E", "B08201_002E", "state", "county", "tract", "block group"],
+        "minimum_records": 1,
+        "field_equals": {"state": "18", "county": "097"}
+      }
+    }
+  ]
+}
