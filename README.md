@@ -5,10 +5,10 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 3 establishes a configurable, proximity-based
-> accessibility baseline and reproducible exports. It is a planning-screening
-> indicator, not a walking/network result, causal measure, or policy
-> recommendation. No public API or interactive map exists yet.
+> **Current status:** Milestone 4 adds a versioned FastAPI read API and a
+> MapLibre interactive explorer backed by the local PostGIS analysis run. It
+> remains a planning-screening indicator, not a walking/network result,
+> causal measure, or policy recommendation.
 
 ## Project question
 
@@ -79,8 +79,24 @@ npm run dev
 ```
 
 Copy `.env.example` to `.env` only when local overrides are needed. Never
-commit secrets. The current frontend is a foundation page, not the completed
-interactive GIS application.
+commit secrets. The frontend reads the local API and renders score polygons,
+transit stops, and service layers. Set `VITE_MAP_TILE_URL` to a public raster
+tile template if a basemap is desired; the default blank basemap keeps local
+development credential-free.
+
+### API and web map (Milestone 4)
+
+```bash
+docker compose -f database/docker-compose.yml up -d
+python -m indy_accessibility_etl migrate
+python -m indy_accessibility_etl production-db
+python -m indy_accessibility_etl analyze
+uvicorn indy_accessibility_api.main:app --reload
+cd frontend && npm ci && npm run dev
+```
+
+The API is documented at `/docs`; endpoint contracts and limitations are in
+[`docs/api-web-map.md`](docs/api-web-map.md).
 
 ### PostGIS and ETL (Milestone 2)
 

@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { App } from "./App";
 
 describe("App", () => {
-  it("identifies the foundation status without claiming analytical results", () => {
+  it("identifies the proximity-analysis status and limitations", () => {
     render(<App />);
 
     expect(
@@ -14,10 +14,10 @@ describe("App", () => {
       }),
     ).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
-      "No analytical results are available yet",
+      "Loading local PostGIS analysis",
     );
     expect(
-      screen.getByRole("heading", { level: 2, name: "Method note" }),
+      screen.getByRole("heading", { level: 2, name: "How to read this" }),
     ).toBeInTheDocument();
   });
 });
