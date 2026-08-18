@@ -18,6 +18,16 @@ flowchart LR
   E --> L[etl.load_runs provenance]
 ```
 
+Run the cached production path with `python -m indy_accessibility_etl
+production-db`. It currently supports the cached Marion County boundary,
+2024 Census block-group shapefile, IndyGo GTFS stops, IndianaMap hospitals,
+USDA SNAP retailers filtered to Marion County, Indiana library points, and IFD
+fire stations. The IDOE school workbook is validated and reported but not
+loaded because it contains addresses without coordinates; geocoding is a later
+documented step. ACS is not loaded when its key-protected response is absent.
+Each production run records a load-run row and feature-level loaded,
+quarantined, duplicate, or repaired audit records.
+
 ## Schema and lineage
 
 `boundaries` stores the study boundary, `demographics` stores Census block

@@ -5,6 +5,7 @@ import json
 
 from .fixture import load_fixture, load_fixture_to_database
 from .migrations import apply_migrations, database_url
+from .production import load_production_to_database, run_production_etl
 
 
 def main() -> None:
@@ -13,14 +14,45 @@ def main() -> None:
     subparsers.add_parser("migrate")
     subparsers.add_parser("load-fixture")
     subparsers.add_parser("load-fixture-db")
+    subparsers.add_parser("production")
+    subparsers.add_parser("production-db")
     args = parser.parse_args()
     if args.command == "migrate":
         print(json.dumps({"applied": apply_migrations()}))
     elif args.command == "load-fixture":
-        result = load_fixture()
-        print(json.dumps({"loaded": len(result.loaded), "audit": list(result.audit)}))
-    else:
+        fixture_result = load_fixture()
+        print(
+            json.dumps(
+                {
+                    "loaded": len(fixture_result.loaded),
+                    "audit": list(fixture_result.audit),
+                }
+            )
+        )
+    elif args.command == "load-fixture-db":
         print(json.dumps(load_fixture_to_database(database_url())))
+    elif args.command == "production":
+        production_result = run_production_etl()
+        print(
+            json.dumps(
+                {
+                    "loaded": len(production_result.records),
+                    "audit": len(production_result.audit),
+                    "unsupported": production_result.unsupported,
+                }
+            )
+        )
+    else:
+        production_result = load_production_to_database(database_url())
+        print(
+            json.dumps(
+                {
+                    "loaded": len(production_result.records),
+                    "audit": len(production_result.audit),
+                    "unsupported": production_result.unsupported,
+                }
+            )
+        )
 
 
 if __name__ == "__main__":
