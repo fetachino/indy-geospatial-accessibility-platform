@@ -209,6 +209,43 @@ tempCodeRunnerFile.py
 # PyPI configuration file
 .pypirc
 
+# Node and frontend build output
+node_modules/
+frontend/dist/
+*.tsbuildinfo
+
+# Local tooling and operating-system files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Downloaded and generated geospatial data. Keep the directories and their
+# provenance/download code, but never commit local data products.
+data/raw/*
+!data/raw/.gitkeep
+data/interim/*
+!data/interim/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.gpkg
+*.gdb/
+*.fgdb/
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.tif
+*.tiff
+*.vrt
+*.parquet
+*.geojson
+
+# Local database volumes and generated reports
+.postgres-data/
+reports/generated/
+
 # Marimo
 marimo/_static/
 marimo/_lsp/
