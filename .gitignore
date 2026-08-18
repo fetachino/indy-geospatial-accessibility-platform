@@ -241,6 +241,7 @@ data/processed/*
 *.vrt
 *.parquet
 *.geojson
+!backend/tests/fixtures/**/*.geojson
 
 # Local database volumes and generated reports
 .postgres-data/

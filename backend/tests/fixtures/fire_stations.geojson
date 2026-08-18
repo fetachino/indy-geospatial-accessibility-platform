@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"OBJECTID": 1, "ADDRESS": "200 Test Avenue", "STATION": "SYNTHETIC", "BATTALION": "TEST"},
+      "geometry": {"type": "Point", "coordinates": [-86.15, 39.78]}
+    }
+  ]
+}

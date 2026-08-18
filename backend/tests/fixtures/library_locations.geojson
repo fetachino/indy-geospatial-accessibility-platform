@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "objectid": 1,
+        "user_library_name": "Synthetic Public Library",
+        "user_branch_name": "Synthetic Branch",
+        "fulladdress": "300 Test Road, Indianapolis, IN 46204",
+        "user_city": "Indianapolis",
+        "user_zip": "46204",
+        "user_updated": "2025-05-01",
+        "type": "Public"
+      },
+      "geometry": {"type": "Point", "coordinates": [-86.14, 39.76]}
+    }
+  ]
+}
