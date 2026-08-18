@@ -99,6 +99,8 @@ The API uses the same `DATABASE_URL` as ETL when set, or derives one from
 `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, and
 `POSTGRES_PASSWORD`. It is documented at `/docs`; endpoint contracts and limitations are in
 [`docs/api-web-map.md`](docs/api-web-map.md).
+Click a rendered block-group polygon to inspect that feature's GEOID, score
+components, nearby transit count, service categories, and status flags.
 
 ### PostGIS and ETL (Milestone 2)
 

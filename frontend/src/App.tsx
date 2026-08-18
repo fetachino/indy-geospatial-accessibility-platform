@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { Map, NavigationControl, type StyleSpecification } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { api, type FeatureCollection, type RunSummary } from "./api";
+import { selectedFeatureProperties } from "./selection";
 
 const categories = ["hospital", "grocery_store", "library", "fire_station"];
 
@@ -102,6 +103,20 @@ export function App() {
     });
     mapRef.current = map;
     map.on("load", () => setMapReady(true));
+    map.on("click", "blocks-fill", (event) => {
+      const feature = event.features?.[0];
+      if (feature?.properties) {
+        setSelected(
+          selectedFeatureProperties({ properties: feature.properties }),
+        );
+      }
+    });
+    map.on("mouseenter", "blocks-fill", () => {
+      map.getCanvas().style.cursor = "pointer";
+    });
+    map.on("mouseleave", "blocks-fill", () => {
+      map.getCanvas().style.cursor = "";
+    });
     map.addControl(new NavigationControl(), "top-right");
     return () => {
       map.remove();
@@ -138,7 +153,7 @@ export function App() {
               100,
               "#2166ac",
             ],
-            "fill-opacity": 0.55,
+            "fill-opacity": 0.7,
           },
         });
       if (!map.getLayer("blocks-outline"))
@@ -275,15 +290,6 @@ export function App() {
           {visibleServices.length} enabled service layers loaded.
         </div>
       </section>
-      {blocks?.features[0] && (
-        <button
-          type="button"
-          className="sample-result"
-          onClick={() => setSelected(blocks.features[0].properties)}
-        >
-          Inspect a sample block-group result
-        </button>
-      )}
       {selected && (
         <aside className="popup" aria-label="Block group detail">
           <button
@@ -298,8 +304,16 @@ export function App() {
             <strong>{displayValue(selected.geoid)}</strong>
           </p>
           <p>Total score: {displayValue(selected.total_accessibility_score)}</p>
+          <p>Transit score: {displayValue(selected.transit_access_score)}</p>
+          <p>Service score: {displayValue(selected.service_access_score)}</p>
           <p>
             Transit stops nearby: {displayValue(selected.transit_stop_count)}
+          </p>
+          <p>
+            Service categories:{" "}
+            {Array.isArray(selected.service_categories)
+              ? selected.service_categories.join(", ") || "none"
+              : "unavailable"}
           </p>
           <p>
             Status:{" "}

@@ -37,9 +37,11 @@ client-safe 503. Interactive OpenAPI documentation is available at `/docs`.
 ## Map behavior and limitations
 
 The client provides score-range filters, service-layer toggles, loading/error
-and retry states, a score legend, and sample block-group details. Polygon colors
-represent the Milestone 3 composite score; transit and service points are
-separate layers. The analysis is straight-line proximity with known missing
+and retry states, a score legend, and click selection on the actual block-group
+polygons. The selected feature reports its GEOID, total/transit/service scores,
+nearby transit count, service categories, and status flags. Polygon colors
+represent each feature's Milestone 3 composite score; transit and service points
+are separate layers. The analysis is straight-line proximity with known missing
 school geocoding and unavailable ACS normalization, not a routing or travel-time
 model. The ArcGIS adapter and production hosting are deferred to Milestone 5.
 Automated browser screenshot capture is not available in this environment; CI

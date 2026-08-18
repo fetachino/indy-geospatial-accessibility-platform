@@ -40,7 +40,13 @@ class FakeConnection:
             return FakeResult((0.0, 80.0, 40.0, 1, 0, 0, 0, 0))
         if "json_build_object" in sql:
             return FakeResult(
-                rows=[('{"type":"Feature","geometry":null,"properties":{}}',)]
+                rows=[
+                    (
+                        '{"type":"Feature","geometry":null,"properties":'
+                        '{"geoid":"180970001001",'
+                        '"total_accessibility_score":72.5}}',
+                    )
+                ]
             )
         if "analysis.block_group_results" in sql:
             return FakeResult(("{}", "180970001001", 2, 50.0, 40.0, 46.0, []))
@@ -116,7 +122,9 @@ def test_api_features_and_summary_with_fake_database(monkeypatch) -> None:  # ty
     client = TestClient(main.app)
     assert client.get("/api/v1/runs/latest").status_code == 200
     assert client.get("/api/v1/runs/latest/summary").status_code == 200
-    assert client.get("/api/v1/block-groups").json()["type"] == "FeatureCollection"
+    block_group = client.get("/api/v1/block-groups").json()
+    assert block_group["type"] == "FeatureCollection"
+    assert block_group["features"][0]["properties"]["total_accessibility_score"] == 72.5
     assert client.get("/api/v1/block-groups/180970001001").json()["type"] == "Feature"
     assert client.get("/api/v1/transit/stops").json()["type"] == "FeatureCollection"
     assert (
