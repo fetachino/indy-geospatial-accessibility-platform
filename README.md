@@ -5,10 +5,20 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 4 adds a versioned FastAPI read API and a
-> MapLibre interactive explorer backed by the local PostGIS analysis run. It
+> **Current status:** Milestone 6 prepares the completed PostGIS, FastAPI,
+> React/MapLibre, and optional ArcGIS documentation for portfolio release. It
 > remains a planning-screening indicator, not a walking/network result,
 > causal measure, or policy recommendation.
+
+![Verified Accessibility Explorer screenshot](docs/images/accessibility-explorer.png)
+
+## Why this project matters
+
+This portfolio demonstrates how a GIS developer can turn public data into a
+reproducible spatial product: source provenance and validation, projected-CRS
+ETL in PostGIS, transparent accessibility scoring, a tested API, and an
+accessible browser map. It also shows how to document uncertainty instead of
+overstating what a proximity screen can prove.
 
 ## Project question
 
@@ -36,6 +46,17 @@ network accessibility and document uncertainty and limitations.
 
 The rationale and component boundaries are recorded in
 [`docs/architecture/0001-platform-foundation.md`](docs/architecture/0001-platform-foundation.md).
+
+```mermaid
+flowchart LR
+  A[Public sources] --> B[Python acquisition + catalog]
+  B --> C[PostGIS ETL\nEPSG:26916]
+  C --> D[Proximity analysis\nrun + audit]
+  D --> E[FastAPI /api/v1\nWGS84 GeoJSON]
+  E --> F[React + MapLibre\nfilters and click details]
+  C --> G[GeoJSON / CSV exports]
+  G -. optional, account-dependent .-> H[ArcGIS Pro / Online]
+```
 
 ## Repository layout
 
@@ -234,6 +255,11 @@ npm run test
 npm run build
 ```
 
+Release artifacts and the technical narrative are in [`docs/case-study.md`](docs/case-study.md),
+[`docs/resume-bullets.md`](docs/resume-bullets.md), and
+[`docs/interview-talk-track.md`](docs/interview-talk-track.md). Draft v0.1.0
+notes are in [`docs/release-notes-v0.1.0.md`](docs/release-notes-v0.1.0.md).
+
 ## Data policy
 
 Authoritative public sources are preferred. Each dataset added in Milestone 1
@@ -249,8 +275,8 @@ network is methodologically appropriate and attribution requirements are met.
 | Milestone | Acceptance boundary |
 | --- | --- |
 | **0 — Foundation** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
-| **1 — Data acquisition (current)** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and synthetic legal fixtures implemented. Eight credential-free sources verified live; ACS requires a user-provided key or manual download. |
-| **2 — Spatial database and ETL (in progress)** | PostGIS Compose service, cached-source production ETL for supported Milestone 1 files, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and fixture/integration tests. School address geocoding and ACS acquisition remain explicit source limitations. |
+| **1 — Data acquisition** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and legal fixtures implemented. ACS requires a user-provided key or manual download. |
+| **2 — Spatial database and ETL** | PostGIS Compose service, cached-source production ETL, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and fixture/integration tests. School address geocoding and ACS acquisition remain explicit source limitations. |
 | **3 — Accessibility analysis** | Transparent proximity baseline, population normalization, composite score, spatial edge-case tests, documented exports, and—if feasible—a separately described network comparison complete. |
 | **4 — API and web map** | Versioned API and responsive interactive map expose real results with filters, legends, accessible controls, loading/error states, and backend/frontend tests. |
 | **5 — Esri integration** | Optional ArcGIS Pro/Online runbooks, ArcGIS-ready metadata, and graceful ArcPy helper documented; no Esri account or licensed execution claimed. |
