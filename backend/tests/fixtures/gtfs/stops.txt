@@ -1,0 +1,2 @@
+stop_id,stop_name,stop_lat,stop_lon
+stop-1,Synthetic Stop,39.77,-86.16

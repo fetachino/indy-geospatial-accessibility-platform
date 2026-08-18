@@ -132,7 +132,6 @@ def validate_source(path: Path, dataset: Dataset) -> None:
         "csv_zip": _validate_csv_zip,
         "geojson": _validate_geojson,
         "gtfs_zip": _validate_gtfs_zip,
-        "html": _validate_html,
         "shapefile_zip": _validate_shapefile_zip,
         "xlsx": _validate_xlsx,
     }
@@ -184,7 +183,6 @@ def _validate_content_type(dataset: Dataset, content_type: str) -> None:
             "text/plain",
         },
         "gtfs_zip": {"application/zip", "application/octet-stream"},
-        "html": {"text/html", "application/xhtml+xml"},
         "shapefile_zip": {
             "application/zip",
             "application/octet-stream",
@@ -319,21 +317,6 @@ def _validate_xlsx(path: Path, dataset: Dataset, rules: ValidationRules) -> None
                 _require_minimum_records(dataset, count, rules.minimum_records)
         finally:
             workbook.close()
-
-
-def _validate_html(path: Path, dataset: Dataset, rules: ValidationRules) -> None:
-    text = path.read_text(encoding="utf-8", errors="replace")
-    lowered = text.casefold()
-    missing = [
-        value for value in rules.required_text or [] if value.casefold() not in lowered
-    ]
-    if missing:
-        raise SourceValidationError(
-            f"{dataset.id}: HTML is missing expected text: {', '.join(missing)}"
-        )
-    marker = (rules.required_text or [""])[-1]
-    count = lowered.count(marker.casefold())
-    _require_minimum_records(dataset, count, rules.minimum_records)
 
 
 def _validate_census_json(path: Path, dataset: Dataset, rules: ValidationRules) -> None:

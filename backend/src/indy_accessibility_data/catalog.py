@@ -52,7 +52,6 @@ class ValidationRules(BaseModel):
         "csv_zip",
         "geojson",
         "gtfs_zip",
-        "html",
         "shapefile_zip",
         "xlsx",
     ]
@@ -74,7 +73,6 @@ class ValidationRules(BaseModel):
             "csv_zip": self.required_fields,
             "geojson": self.required_fields,
             "gtfs_zip": self.required_members,
-            "html": self.required_text,
             "shapefile_zip": self.required_members,
             "xlsx": self.required_sheets,
         }
@@ -97,7 +95,6 @@ class Dataset(BaseModel):
     source_url: str
     retrieval_method: Literal[
         "http_get",
-        "http_get_html",
         "http_get_subject_to_terms",
         "http_get_with_environment_parameter",
     ]

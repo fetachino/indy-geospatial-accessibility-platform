@@ -1,0 +1,2 @@
+agency_id,agency_name,agency_url,agency_timezone
+synthetic,Synthetic Transit,https://example.invalid,America/Indiana/Indianapolis
