@@ -12,6 +12,7 @@ license = "MIT"
 authors = [{ name = "Ahmed Balde" }]
 dependencies = [
   "fastapi>=0.116,<1.0",
+  "openpyxl>=3.1,<4.0",
   "uvicorn[standard]>=0.35,<1.0",
 ]
 
@@ -22,6 +23,7 @@ dev = [
   "pytest>=8.4,<9.0",
   "pytest-cov>=6.2,<7.0",
   "ruff>=0.12,<1.0",
+  "types-openpyxl>=3.1,<4.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -49,4 +51,3 @@ quote-style = "double"
 python_version = "3.11"
 strict = true
 files = ["backend/src", "backend/tests"]
-
