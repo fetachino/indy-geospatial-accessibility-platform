@@ -5,9 +5,12 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 0 establishes the tested project foundation.
-> No datasets have been acquired and no accessibility results have been
-> calculated. The map and analysis shown in the roadmap are not yet available.
+> **Current status:** Milestone 1 establishes reproducible source-data
+> acquisition. Nine planned sources are cataloged; eight credential-free
+> sources were downloaded and schema-validated during milestone verification.
+> The ACS API workflow requires a user-provided Census API key or the documented
+> manual fallback. No PostGIS database, accessibility results, or interactive
+> map exists yet.
 
 ## Project question
 
@@ -81,6 +84,61 @@ Copy `.env.example` to `.env` only when local overrides are needed. Never
 commit secrets. The current frontend is a foundation page, not the completed
 interactive GIS application.
 
+## Data acquisition
+
+List cataloged sources and their authority status:
+
+```bash
+python -m indy_accessibility_data catalog
+python -m indy_accessibility_data catalog --verbose
+```
+
+Acquire one source, or all sources that do not require unavailable credentials:
+
+```bash
+python -m indy_accessibility_data acquire marion_county_boundary
+python -m indy_accessibility_data acquire --all --skip-unavailable
+```
+
+To acquire ACS demographics, request a free key through the
+[Census API key form](https://api.census.gov/data/key_signup.html), set it only
+in the current shell, and run:
+
+```bash
+# PowerShell
+$env:CENSUS_API_KEY="your-key"
+python -m indy_accessibility_data acquire acs_2024_block_group_demographics
+
+# bash/zsh
+export CENSUS_API_KEY="your-key"
+python -m indy_accessibility_data acquire acs_2024_block_group_demographics
+```
+
+Downloaded files are written to `data/raw/<dataset-id>/` with a sidecar JSON
+manifest containing retrieval time, byte count, selected HTTP provenance, and a
+SHA-256 checksum. Re-running a command validates and reuses a cached response.
+Use `--force` to download again or `--validate-existing` after following a
+catalog manual-download fallback. The entire raw cache is ignored by Git.
+
+### Verified source inventory
+
+| Analytical need | Selected source | Status and key limitation |
+| --- | --- | --- |
+| Study-area boundary | City of Indianapolis/Marion County boundary service | Official GeoJSON query; no explicit license in service metadata. |
+| Small-area geography | Census 2024 TIGER/Line block groups | Official statewide archive; block groups are not resident-defined neighborhoods. |
+| Transit stops, routes, and schedules | IndyGo static GTFS | Official feed validated; use remains subject to IndyGo's request form and terms. |
+| Hospitals | IndianaMap Hospital Locations 2023 | State-published HIFLD-derived aggregator; incomplete sources and dataset age are explicit limitations. |
+| Grocery stores | USDA SNAP Retailer Locator 2005–2025 | Federal fallback only; SNAP authorization is not a complete grocery inventory. |
+| Schools | IDOE 2025–2026 School Directory | Official workbook; address-only records require later geocoding. |
+| Libraries | Indiana State Library / IndianaMap 2025 locations | Official statewide point layer; later filtering must distinguish public libraries and cross-check current IndyPL branches. |
+| Fire stations | City/County IFD station service | Official IFD points; non-IFD station coverage remains to be evaluated. |
+| Population and demographics | Census 2020–2024 ACS 5-year API | Official block-group estimates with margins of error; API key required in the verified environment. |
+
+Full field-level metadata, terms, manual fallbacks, formats, CRSs, and quality
+rules are in [`data/catalog/datasets.json`](data/catalog/datasets.json). Source
+selection rationale is in
+[`docs/data-provenance.md`](docs/data-provenance.md).
+
 ## Verification
 
 ```bash
@@ -110,8 +168,8 @@ network is methodologically appropriate and attribution requirements are met.
 
 | Milestone | Acceptance boundary |
 | --- | --- |
-| **0 — Foundation (current)** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
-| **1 — Data acquisition** | Authoritative sources verified and cataloged; reproducible downloads, provenance controls, schemas, quality tests, manual fallbacks, and a legal test fixture added. |
+| **0 — Foundation** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
+| **1 — Data acquisition (current)** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and synthetic legal fixtures implemented. Eight credential-free sources verified live; ACS requires a user-provided key or manual download. |
 | **2 — Spatial database and ETL** | PostGIS Compose service, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and integration tests complete. |
 | **3 — Accessibility analysis** | Transparent proximity baseline, population normalization, composite score, spatial edge-case tests, documented exports, and—if feasible—a separately described network comparison complete. |
 | **4 — API and web map** | Versioned API and responsive interactive map expose real results with filters, legends, accessible controls, loading/error states, and backend/frontend tests. |
@@ -121,13 +179,20 @@ network is methodologically appropriate and attribution requirements are met.
 ## Known limitations
 
 - Data availability, licensing, schemas, and update frequency still require
-  source-by-source verification.
+  re-verification at each retrieval; several public services do not state an
+  explicit open-data license.
 - Docker is installed in the initial development environment, but the Docker
   engine was not responsive during the first inspection; PostGIS support will
   be validated in Milestone 2.
 - No local `psql` client was detected during the first inspection.
 - No ArcGIS credentials or licenses are assumed. The open-source core must work
   without them.
+- The selected grocery dataset measures SNAP-authorized retailers rather than a
+  complete grocery-store universe.
+- School locations require later geocoding, and facility inventories require
+  later temporal and category filtering.
+- ACS automation requires `CENSUS_API_KEY` in the current environment; the key
+  is never stored in cache metadata.
 - A circular proximity buffer is not a walking route. Any baseline using one
   will be labeled accordingly and kept distinct from network analysis.
 

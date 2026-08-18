@@ -1,0 +1,18 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "id": "synthetic-hospital-1",
+        "name": "Synthetic Hospital",
+        "address": "100 Test Street",
+        "county": "MARION",
+        "latitude": 39.77,
+        "longitude": -86.16,
+        "source": "Synthetic test fixture"
+      },
+      "geometry": {"type": "Point", "coordinates": [-86.16, 39.77]}
+    }
+  ]
+}

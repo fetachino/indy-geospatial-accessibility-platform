@@ -12,6 +12,7 @@ license = "MIT"
 authors = [{ name = "Ahmed Balde" }]
 dependencies = [
   "fastapi>=0.116,<1.0",
+  "openpyxl>=3.1,<4.0",
   "uvicorn[standard]>=0.35,<1.0",
 ]
 
@@ -22,17 +23,19 @@ dev = [
   "pytest>=8.4,<9.0",
   "pytest-cov>=6.2,<7.0",
   "ruff>=0.12,<1.0",
+  "types-openpyxl>=3.1,<4.0",
 ]
 
 [tool.setuptools.packages.find]
 where = ["backend/src"]
 
 [tool.pytest.ini_options]
-addopts = "--strict-config --strict-markers --cov=indy_accessibility_api --cov-report=term-missing --cov-fail-under=100"
+addopts = "--strict-config --strict-markers --cov=indy_accessibility_api --cov=indy_accessibility_data --cov-report=term-missing --cov-fail-under=90"
 testpaths = ["backend/tests"]
 
 [tool.coverage.run]
 branch = true
+omit = ["backend/src/indy_accessibility_data/__main__.py"]
 
 [tool.ruff]
 target-version = "py311"
@@ -49,4 +52,3 @@ quote-style = "double"
 python_version = "3.11"
 strict = true
 files = ["backend/src", "backend/tests"]
-

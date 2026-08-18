@@ -1,0 +1,13 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {"OBJECTID": 1, "SUM_ACRES": 1.0, "DISPLAY": "Synthetic test boundary"},
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-86.3, 39.6], [-86.0, 39.6], [-86.0, 39.9], [-86.3, 39.9], [-86.3, 39.6]]]
+      }
+    }
+  ]
+}
