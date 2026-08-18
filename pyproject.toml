@@ -13,6 +13,10 @@ authors = [{ name = "Ahmed Balde" }]
 dependencies = [
   "fastapi>=0.116,<1.0",
   "openpyxl>=3.1,<4.0",
+  "psycopg[binary]>=3.2,<4.0",
+  "pyproj>=3.7,<4.0",
+  "pyshp>=2.3,<3.0",
+  "shapely>=2.0,<3.0",
   "uvicorn[standard]>=0.35,<1.0",
 ]
 
@@ -24,6 +28,7 @@ dev = [
   "pytest-cov>=6.2,<7.0",
   "ruff>=0.12,<1.0",
   "types-openpyxl>=3.1,<4.0",
+  "types-shapely>=2.0,<3.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -32,6 +37,9 @@ where = ["backend/src"]
 [tool.pytest.ini_options]
 addopts = "--strict-config --strict-markers --cov=indy_accessibility_api --cov=indy_accessibility_data --cov-report=term-missing --cov-fail-under=90"
 testpaths = ["backend/tests"]
+markers = [
+  "integration: tests requiring a configured PostgreSQL/PostGIS database",
+]
 
 [tool.coverage.run]
 branch = true

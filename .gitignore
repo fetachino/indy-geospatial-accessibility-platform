@@ -228,6 +228,8 @@ data/interim/*
 !data/interim/.gitkeep
 data/processed/*
 !data/processed/.gitkeep
+data/quarantine/*
+!data/quarantine/.gitkeep
 *.gpkg
 *.gdb/
 *.fgdb/

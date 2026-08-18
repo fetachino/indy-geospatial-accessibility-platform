@@ -5,12 +5,11 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 1 establishes reproducible source-data
-> acquisition. Nine planned sources are cataloged; eight credential-free
-> sources were downloaded and schema-validated during milestone verification.
-> The ACS API workflow requires a user-provided Census API key or the documented
-> manual fallback. No PostGIS database, accessibility results, or interactive
-> map exists yet.
+> **Current status:** Milestone 2 establishes the PostGIS schema, migration
+> contract, projected-CRS geometry rules, and fixture ETL path. The local
+> Docker engine was unavailable during development, so live PostGIS integration
+> remains an explicitly documented follow-up. No accessibility results or
+> interactive map exists yet.
 
 ## Project question
 
@@ -83,6 +82,33 @@ npm run dev
 Copy `.env.example` to `.env` only when local overrides are needed. Never
 commit secrets. The current frontend is a foundation page, not the completed
 interactive GIS application.
+
+### PostGIS and ETL (Milestone 2)
+
+Docker Desktop (or another Docker Engine) is required for a live database. Set
+`POSTGRES_PASSWORD` in an untracked `.env`, then run:
+
+```bash
+docker compose -f database/docker-compose.yml up -d
+python -m indy_accessibility_etl migrate
+python -m indy_accessibility_etl load-fixture
+python -m indy_accessibility_etl production-db
+docker compose -f database/docker-compose.yml down
+```
+
+The fixture command is deterministic and exercises projection, duplicate
+detection, and out-of-county quarantine without downloading production data.
+`production-db` discovers the ignored Milestone 1 cache, validates and projects
+the cached boundary, Census block groups, IndyGo stops, hospitals, SNAP
+retailers, libraries, and IFD stations, then loads supported records
+transactionally with provenance and audit rows. It reports the school workbook
+as address-only (geocoding is deferred) and reports ACS as unavailable when no
+cached API response exists.
+For a fresh database, `docker compose -f database/docker-compose.yml down -v`
+removes the named volume (irreversible). Set `POSTGIS_TEST_DATABASE_URL` to run
+optional integration tests; otherwise tests clearly skip that environment-only
+check. See [`docs/schema-etl.md`](docs/schema-etl.md) for schema, lineage, CRS,
+and validation details.
 
 ## Data acquisition
 
@@ -170,7 +196,7 @@ network is methodologically appropriate and attribution requirements are met.
 | --- | --- |
 | **0 — Foundation** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
 | **1 — Data acquisition (current)** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and synthetic legal fixtures implemented. Eight credential-free sources verified live; ACS requires a user-provided key or manual download. |
-| **2 — Spatial database and ETL** | PostGIS Compose service, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and integration tests complete. |
+| **2 — Spatial database and ETL (in progress)** | PostGIS Compose service, cached-source production ETL for supported Milestone 1 files, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and fixture/integration tests. School address geocoding and ACS acquisition remain explicit source limitations. |
 | **3 — Accessibility analysis** | Transparent proximity baseline, population normalization, composite score, spatial edge-case tests, documented exports, and—if feasible—a separately described network comparison complete. |
 | **4 — API and web map** | Versioned API and responsive interactive map expose real results with filters, legends, accessible controls, loading/error states, and backend/frontend tests. |
 | **5 — Esri integration** | Optional ArcGIS Pro/ArcPy workflow and safe publishing path documented; ArcGIS web adapter implemented only if licensing and credential handling are reproducible. |
