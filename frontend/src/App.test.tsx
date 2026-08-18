@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 import { App } from "./App";
-import { selectedFeatureProperties } from "./selection";
+import { featureAtCoordinate, selectedFeatureProperties } from "./selection";
 
 describe("App", () => {
   it("identifies the proximity-analysis status and limitations", () => {
@@ -38,4 +38,30 @@ it("preserves per-feature score and detail properties for selection", () => {
   expect(properties.total_accessibility_score).toBe(72.5);
   expect(properties.geoid).toBe("180970001001");
   expect(properties.service_categories).toEqual(["hospital", "library"]);
+});
+
+it("finds the clicked feature from GeoJSON coordinates", () => {
+  const feature = featureAtCoordinate(
+    {
+      features: [
+        {
+          geometry: {
+            type: "Polygon",
+            coordinates: [
+              [
+                [0, 0],
+                [2, 0],
+                [2, 2],
+                [0, 0],
+              ],
+            ],
+          },
+          properties: { geoid: "a", total_accessibility_score: 10 },
+        },
+      ],
+    },
+    1,
+    1,
+  );
+  expect(feature?.properties.geoid).toBe("a");
 });

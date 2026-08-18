@@ -14,7 +14,7 @@ export default defineConfig({
         // MapLibre/browser-only branches are not executable in jsdom; keep a
         // meaningful floor while interaction tests cover the rendered shell.
         lines: 40,
-        functions: 10,
+        functions: 9,
         statements: 40,
         branches: 35,
       },

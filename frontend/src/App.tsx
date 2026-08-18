@@ -1,8 +1,13 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { Map, NavigationControl, type StyleSpecification } from "maplibre-gl";
+import { useEffect, useMemo, useRef, useState, type MouseEvent } from "react";
+import {
+  Map,
+  NavigationControl,
+  Point,
+  type StyleSpecification,
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { api, type FeatureCollection, type RunSummary } from "./api";
-import { selectedFeatureProperties } from "./selection";
+import { featureAtCoordinate, selectedFeatureProperties } from "./selection";
 
 const categories = ["hospital", "grocery_store", "library", "fire_station"];
 
@@ -21,6 +26,7 @@ export function App() {
     {},
   );
   const mapRef = useRef<Map | null>(null);
+  const blocksRef = useRef<FeatureCollection | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [enabled, setEnabled] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(categories.map((category) => [category, true])),
@@ -46,6 +52,7 @@ export function App() {
         ]);
       setSummary(nextSummary);
       setBlocks(nextBlocks);
+      blocksRef.current = nextBlocks;
       setStops(nextStops);
       setServices(
         Object.fromEntries(
@@ -103,19 +110,35 @@ export function App() {
     });
     mapRef.current = map;
     map.on("load", () => setMapReady(true));
-    map.on("click", "blocks-fill", (event) => {
-      const feature = event.features?.[0];
+    const selectAtPoint = (point: Point) => {
+      const rendered = map.queryRenderedFeatures(point, {
+        layers: ["blocks-fill"],
+      })[0];
+      const feature =
+        rendered ??
+        (blocksRef.current
+          ? featureAtCoordinate(
+              blocksRef.current,
+              map.unproject(point).lng,
+              map.unproject(point).lat,
+            )
+          : null);
       if (feature?.properties) {
         setSelected(
           selectedFeatureProperties({ properties: feature.properties }),
         );
       }
+    };
+    map.on("click", (event) => selectAtPoint(event.point));
+    map.getCanvas().addEventListener("click", (event) => {
+      selectAtPoint(new Point(event.offsetX, event.offsetY));
     });
-    map.on("mouseenter", "blocks-fill", () => {
-      map.getCanvas().style.cursor = "pointer";
-    });
-    map.on("mouseleave", "blocks-fill", () => {
-      map.getCanvas().style.cursor = "";
+    map.on("mousemove", (event) => {
+      map.getCanvas().style.cursor = map.queryRenderedFeatures(event.point, {
+        layers: ["blocks-fill"],
+      }).length
+        ? "pointer"
+        : "";
     });
     map.addControl(new NavigationControl(), "top-right");
     return () => {
@@ -202,6 +225,34 @@ export function App() {
     });
   }, [blocks, stops, services, enabled, mapReady]);
 
+  const inspectMapClick = (event: MouseEvent<HTMLDivElement>) => {
+    const map = mapRef.current;
+    const node = mapNode.current;
+    if (!map || !node) return;
+    const rect = node.getBoundingClientRect();
+    const point = new Point(
+      event.clientX - rect.left,
+      event.clientY - rect.top,
+    );
+    const rendered = map.queryRenderedFeatures(point, {
+      layers: ["blocks-fill"],
+    })[0];
+    const feature =
+      rendered ??
+      (blocksRef.current
+        ? featureAtCoordinate(
+            blocksRef.current,
+            map.unproject(point).lng,
+            map.unproject(point).lat,
+          )
+        : null);
+    if (feature?.properties) {
+      setSelected(
+        selectedFeatureProperties({ properties: feature.properties }),
+      );
+    }
+  };
+
   const visibleServices = useMemo(
     () => categories.filter((category) => enabled[category]),
     [enabled],
@@ -283,7 +334,7 @@ export function App() {
         </section>
       )}
       <section className="map-shell" aria-label="Interactive accessibility map">
-        <div ref={mapNode} className="map" />
+        <div ref={mapNode} className="map" onClick={inspectMapClick} />
         <div className="map-fallback">
           MapLibre map is ready for local data. {blocks?.features.length ?? 0}{" "}
           block groups, {stops?.features.length ?? 0} transit stops, and{" "}

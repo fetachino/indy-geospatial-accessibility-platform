@@ -29,7 +29,7 @@ export const api = {
   summary: () => get<RunSummary>("/api/v1/runs/latest/summary"),
   blockGroups: (min: number, max: number) =>
     get<FeatureCollection>(
-      `/api/v1/block-groups?min_score=${min}&max_score=${max}`,
+      `/api/v1/block-groups?min_score=${min}&max_score=${max}&limit=5000`,
     ),
   services: (category: string) =>
     get<FeatureCollection>(
