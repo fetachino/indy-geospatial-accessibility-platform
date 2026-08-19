@@ -11,6 +11,12 @@ import { featureAtCoordinate, selectedFeatureProperties } from "./selection";
 
 const categories = ["hospital", "grocery_store", "library", "fire_station"];
 
+function urlNumber(name: string, fallback: number): number {
+  if (typeof window === "undefined") return fallback;
+  const value = Number(new URLSearchParams(window.location.search).get(name));
+  return Number.isFinite(value) ? Math.max(0, Math.min(100, value)) : fallback;
+}
+
 function displayValue(value: unknown): string {
   return typeof value === "string" || typeof value === "number"
     ? String(value)
@@ -31,13 +37,17 @@ export function App() {
   const [enabled, setEnabled] = useState<Record<string, boolean>>(() =>
     Object.fromEntries(categories.map((category) => [category, true])),
   );
-  const [minScore, setMinScore] = useState(0);
-  const [maxScore, setMaxScore] = useState(100);
+  const [minScore, setMinScore] = useState(() => urlNumber("min", 0));
+  const [maxScore, setMaxScore] = useState(() => urlNumber("max", 100));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selected, setSelected] = useState<Record<string, unknown> | null>(
     null,
   );
+  const selectedGoeid =
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("geoid");
 
   const load = async () => {
     setLoading(true);
@@ -59,6 +69,12 @@ export function App() {
           categories.map((category, index) => [category, nextServices[index]]),
         ),
       );
+      if (selectedGoeid) {
+        const match = nextBlocks.features.find(
+          (feature) => feature.properties.geoid === selectedGoeid,
+        );
+        if (match) setSelected(match.properties);
+      }
     } catch (cause) {
       setError(
         cause instanceof Error
@@ -73,6 +89,23 @@ export function App() {
   useEffect(() => {
     if (import.meta.env.MODE !== "test") void load();
   }, [minScore, maxScore]);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    params.set("min", String(minScore));
+    params.set("max", String(maxScore));
+    if (
+      typeof selected?.geoid === "string" ||
+      typeof selected?.geoid === "number"
+    )
+      params.set("geoid", String(selected.geoid));
+    else params.delete("geoid");
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}?${params}`,
+    );
+  }, [minScore, maxScore, selected]);
   useEffect(() => {
     if (!mapNode.current || import.meta.env.MODE === "test") return;
     const tileUrl = import.meta.env.VITE_MAP_TILE_URL;
@@ -331,6 +364,33 @@ export function App() {
           · mean score{" "}
           <strong>{summary.score_distribution.mean.toFixed(1)}</strong> ·
           ACS-normalized metrics unavailable
+        </section>
+      )}
+      {!loading && !error && summary && (
+        <section className="score-chart" aria-label="Score distribution">
+          <h2>Score distribution</h2>
+          <div className="chart-bars">
+            {Object.entries(summary.score_distribution.buckets).map(
+              ([label, count]) => {
+                const maximum = Math.max(
+                  ...Object.values(summary.score_distribution.buckets),
+                  1,
+                );
+                return (
+                  <div className="chart-bar" key={label}>
+                    <span className="chart-count">
+                      {count.toLocaleString()}
+                    </span>
+                    <i style={{ height: `${(count / maximum) * 100}%` }} />
+                    <span>{label}</span>
+                  </div>
+                );
+              },
+            )}
+          </div>
+          <p className="chart-note">
+            Counts from the latest completed analysis run.
+          </p>
         </section>
       )}
       <section className="map-shell" aria-label="Interactive accessibility map">
