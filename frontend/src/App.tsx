@@ -44,6 +44,9 @@ export function App() {
   const [selected, setSelected] = useState<Record<string, unknown> | null>(
     null,
   );
+  const [selectedFeature, setSelectedFeature] = useState<
+    FeatureCollection["features"][number] | null
+  >(null);
   const selectedGoeid =
     typeof window === "undefined"
       ? null
@@ -73,7 +76,10 @@ export function App() {
         const match = nextBlocks.features.find(
           (feature) => feature.properties.geoid === selectedGoeid,
         );
-        if (match) setSelected(match.properties);
+        if (match) {
+          setSelected(match.properties);
+          setSelectedFeature(match);
+        }
       }
     } catch (cause) {
       setError(
@@ -256,7 +262,26 @@ export function App() {
           enabled[category] ? "visible" : "none",
         );
     });
-  }, [blocks, stops, services, enabled, mapReady]);
+    const selectedData: FeatureCollection = {
+      type: "FeatureCollection",
+      features: selectedFeature ? [selectedFeature] : [],
+    };
+    sync("selected-block-group", selectedData);
+    if (!map.getLayer("selected-block-group-fill"))
+      map.addLayer({
+        id: "selected-block-group-fill",
+        type: "fill",
+        source: "selected-block-group",
+        paint: { "fill-color": "#ffd166", "fill-opacity": 0.28 },
+      });
+    if (!map.getLayer("selected-block-group-outline"))
+      map.addLayer({
+        id: "selected-block-group-outline",
+        type: "line",
+        source: "selected-block-group",
+        paint: { "line-color": "#111827", "line-width": 3 },
+      });
+  }, [blocks, stops, services, enabled, mapReady, selectedFeature]);
 
   const inspectMapClick = (event: MouseEvent<HTMLDivElement>) => {
     const map = mapRef.current;
@@ -280,6 +305,7 @@ export function App() {
           )
         : null);
     if (feature?.properties) {
+      setSelectedFeature(feature);
       setSelected(
         selectedFeatureProperties({ properties: feature.properties }),
       );
@@ -405,7 +431,10 @@ export function App() {
         <aside className="popup" aria-label="Block group detail">
           <button
             type="button"
-            onClick={() => setSelected(null)}
+            onClick={() => {
+              setSelected(null);
+              setSelectedFeature(null);
+            }}
             aria-label="Close detail"
           >
             ×
