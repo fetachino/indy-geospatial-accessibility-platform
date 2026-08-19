@@ -1,5 +1,7 @@
 # Indy Geospatial Accessibility Platform
 
+[![CI](https://github.com/fetachino/indy-geospatial-accessibility-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/fetachino/indy-geospatial-accessibility-platform/actions/workflows/ci.yml)
+
 A production-style GIS portfolio project investigating which Marion County,
 Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
@@ -9,6 +11,11 @@ stations.
 > runnable PostGIS, FastAPI, and React/MapLibre application with optional ArcGIS
 > documentation. It is a planning-screening indicator, not a walking/network
 > result, causal measure, or policy recommendation.
+
+**Local demo:** start the services with the [quick-start commands](#quick-start),
+then open the [interactive map](http://127.0.0.1:5173/) or the [FastAPI
+documentation](http://127.0.0.1:8000/docs). These links are intentionally local;
+the project does not claim a hosted deployment.
 
 ## Screenshots
 
@@ -63,6 +70,17 @@ This project turns public data into a reproducible spatial product:
 
 The methodology is deliberately transparent about uncertainty instead of
 overstating what a proximity screen can prove.
+
+## Key engineering highlights
+
+- Reproducible public-data acquisition with source catalogs, validation, and
+  cached raw files kept outside Git
+- Transactional PostGIS ETL with projected-CRS transformations, spatial
+  indexes, quarantine handling, lineage, and audit records
+- Tested FastAPI endpoints serving filtered WGS84 GeoJSON and analysis-run
+  summaries
+- Responsive React/MapLibre interaction with score filters, layer toggles,
+  URL-preserved selections, and click-driven feature details
 
 ## Technology stack
 
@@ -153,11 +171,7 @@ python -m venv .venv
 python -m pip install --upgrade pip
 python -m pip install -e ".[dev]"
 pytest
-uvicorn indy_accessibility_api.main:app --reload
 ```
-
-The health check is available at `http://127.0.0.1:8000/health` and interactive
-API documentation at `http://127.0.0.1:8000/docs`.
 
 ### Frontend
 
@@ -165,7 +179,6 @@ API documentation at `http://127.0.0.1:8000/docs`.
 cd frontend
 npm ci
 npm run test
-npm run dev
 ```
 
 Copy `.env.example` to `.env` only when local overrides are needed. Never
@@ -174,65 +187,41 @@ transit stops, and service layers. Set `VITE_MAP_TILE_URL` to a public raster
 tile template if a basemap is desired; the default blank basemap keeps local
 development credential-free.
 
-### API and web map (Milestone 4)
+### Run the local demo
 
-```bash
+```powershell
 docker compose -f database/docker-compose.yml up -d
 python -m indy_accessibility_etl migrate
 python -m indy_accessibility_etl production-db
 python -m indy_accessibility_etl analyze
+# Start FastAPI in this tab, then start the frontend in a second tab.
 uvicorn indy_accessibility_api.main:app --reload
-cd frontend && npm ci && npm run dev
 ```
 
-The API uses the same `DATABASE_URL` as ETL when set, or derives one from
-`POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_DB`, `POSTGRES_USER`, and
-`POSTGRES_PASSWORD`. It is documented at `/docs`; endpoint contracts and limitations are in
-[`docs/api-web-map.md`](docs/api-web-map.md).
-Click a rendered block-group polygon to inspect that feature's GEOID, score
-components, nearby transit count, service categories, and status flags.
+In a second PowerShell tab:
 
-### PostGIS and ETL (Milestone 2)
-
-Docker Desktop (or another Docker Engine) is required for a live database. Set
-`POSTGRES_PASSWORD` in an untracked `.env`, then run:
-
-```bash
-docker compose -f database/docker-compose.yml up -d
-python -m indy_accessibility_etl migrate
-python -m indy_accessibility_etl load-fixture
-python -m indy_accessibility_etl production-db
-docker compose -f database/docker-compose.yml down
+```powershell
+cd frontend
+npm ci
+npm run dev
 ```
 
-The fixture command is deterministic and exercises projection, duplicate
-detection, and out-of-county quarantine without downloading production data.
-`production-db` discovers the ignored Milestone 1 cache, validates and projects
-the cached boundary, Census block groups, IndyGo stops, hospitals, SNAP
-retailers, libraries, and IFD stations, then loads supported records
-transactionally with provenance and audit rows. It reports the school workbook
-as address-only (geocoding is deferred) and reports ACS as unavailable when no
-cached API response exists.
-For a fresh database, `docker compose -f database/docker-compose.yml down -v`
-removes the named volume (irreversible). Set `POSTGIS_TEST_DATABASE_URL` to run
-optional integration tests; otherwise tests clearly skip that environment-only
-check. See [`docs/schema-etl.md`](docs/schema-etl.md) for schema, lineage, CRS,
-and validation details.
+Open `http://127.0.0.1:5173/` for the map or
+`http://127.0.0.1:8000/docs` for the API. The API uses the same `DATABASE_URL`
+as ETL when set. Endpoint contracts, interaction details, and limitations are
+in [`docs/api-web-map.md`](docs/api-web-map.md).
 
-### Accessibility analysis (Milestone 3)
+### Deeper technical workflows
 
-After the PostGIS database is loaded, run the configurable proximity baseline
-and export a run by ID:
+The detailed data, ETL, and analysis workflows are documented separately:
 
-```bash
-python -m indy_accessibility_etl analyze
-python -m indy_accessibility_etl export <run-id>
-```
+- [`docs/data-provenance.md`](docs/data-provenance.md) — source decisions and
+  limitations
+- [`docs/schema-etl.md`](docs/schema-etl.md) — PostGIS schema, CRS, ETL,
+  lineage, and validation
+- [`docs/accessibility-methodology.md`](docs/accessibility-methodology.md) —
+  thresholds, weights, score construction, and caveats
 
-Outputs are written to ignored `data/processed/` files. The exact 400-meter
-transit threshold, 1,600-meter service threshold, weights, missing-category
-handling, and ACS behavior are documented in
-[`docs/accessibility-methodology.md`](docs/accessibility-methodology.md).
 
 ### Optional ArcGIS integration (Milestone 5)
 
