@@ -313,6 +313,18 @@ network is methodologically appropriate and attribution requirements are met.
 
 | Milestone | Delivered capability |
 | --- | --- |
+| **0 — Foundation** | Architecture, repository guidance, and installable backend/frontend foundations. |
+| **1 — Data acquisition** | Cataloged sources, cached downloads, validation, legal fixtures, and manual fallbacks. |
+| **2 — Spatial database and ETL** | PostGIS schema, projected-CRS transformations, production-source loading, lineage, and audit records. |
+| **3 — Accessibility analysis** | Transparent proximity baseline, composite scoring, edge-case tests, and exports. |
+| **4 — API and web map** | Versioned API and responsive MapLibre interface with filters, legends, and click details. |
+| **5 — Esri integration** | Optional ArcGIS Pro/Online runbooks and graceful ArcPy fallback; no licensed execution claimed. |
+| **6 — Portfolio release** | Verified setup, screenshots, case study, limitations, release notes, and recruiter-facing documentation. |
+
+<!-- Historical milestone acceptance table retained below for project traceability; the concise delivered summary above is the reader-facing version.
+
+| Milestone | Delivered capability |
+| --- | --- |
 | **0 — Foundation** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
 | **1 — Data acquisition** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and legal fixtures implemented. ACS requires a user-provided key or manual download. |
 | **2 — Spatial database and ETL** | PostGIS Compose service, cached-source production ETL, spatial schema/indexes, projected-CRS transformations, geometry repair, reproducible loads, lineage, and fixture/integration tests. School address geocoding and ACS acquisition remain explicit source limitations. |
@@ -320,6 +332,8 @@ network is methodologically appropriate and attribution requirements are met.
 | **4 — API and web map** | Versioned API and responsive interactive map expose real results with filters, legends, accessible controls, loading/error states, and backend/frontend tests. |
 | **5 — Esri integration** | Optional ArcGIS Pro/Online runbooks, ArcGIS-ready metadata, and graceful ArcPy helper documented; no Esri account or licensed execution claimed. |
 | **6 — Portfolio release** | Verified clean-environment commands, screenshots, architecture diagram, technical case study, findings and limitations, user guide, release notes, measured benchmarks if any, and evidence-based résumé bullets complete. |
+
+-->
 
 ## Known limitations
 
