@@ -3,6 +3,12 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   plugins: [react()],
+  // MapLibre ships a browser worker that Vite's dependency optimizer can
+  // incorrectly pre-bundle on Windows, leaving a missing worker module and a
+  // blank map canvas. Keep the package unbundled for local development.
+  optimizeDeps: {
+    exclude: ["maplibre-gl"],
+  },
   test: {
     environment: "jsdom",
     setupFiles: ["./src/test/setup.ts"],
