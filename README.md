@@ -82,6 +82,17 @@ overstating what a proximity screen can prove.
 - Responsive React/MapLibre interaction with score filters, layer toggles,
   URL-preserved selections, and click-driven feature details
 
+## What this proves
+
+- GIS data engineering with public-source provenance, validation, projected-CRS
+  transformations, and spatial database loading
+- Transparent accessibility analysis that separates proximity screening from
+  walking access, network travel time, and policy conclusions
+- Tested backend/API development with filtered GeoJSON, audit-aware analysis
+  runs, and clear local diagnostics
+- Responsive map-interface delivery with score visualization, layer controls,
+  mobile layouts, and feature-level inspection
+
 ## Technology stack
 
 **GIS and spatial data**
