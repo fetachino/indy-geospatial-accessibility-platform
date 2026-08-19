@@ -66,14 +66,28 @@ overstating what a proximity screen can prove.
 
 ## Technology stack
 
-[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![GeoPandas](https://img.shields.io/badge/GeoPandas-139C5A?logo=python&logoColor=white)](https://geopandas.org/)
+**GIS and spatial data**
+
 [![PostGIS](https://img.shields.io/badge/PostGIS-4169E1?logo=postgresql&logoColor=white)](https://postgis.net/)
+[![Shapely](https://img.shields.io/badge/Shapely-3B7A57?logo=python&logoColor=white)](https://shapely.readthedocs.io/)
+[![PyProj](https://img.shields.io/badge/PyProj-3776AB?logo=python&logoColor=white)](https://pyproj4.github.io/pyproj/)
+[![pyshp](https://img.shields.io/badge/pyshp-3776AB?logo=python&logoColor=white)](https://github.com/GeospatialPython/pyshp)
+[![MapLibre](https://img.shields.io/badge/MapLibre-396CB2?logo=maplibre&logoColor=white)](https://maplibre.org/)
+[![OpenStreetMap](https://img.shields.io/badge/OpenStreetMap-7EBC6F?logo=openstreetmap&logoColor=white)](https://www.openstreetmap.org/)
+
+**Backend and application development**
+
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
 [![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![MapLibre](https://img.shields.io/badge/MapLibre-396CB2?logo=maplibre&logoColor=white)](https://maplibre.org/)
-[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+
+**Developer tools and delivery**
+
+[![Docker Desktop](https://img.shields.io/badge/Docker_Desktop-2496ED?logo=docker&logoColor=white)](https://www.docker.com/products/docker-desktop/)
+[![Node.js](https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](https://docs.github.com/en/actions)
 
 ## Project question
