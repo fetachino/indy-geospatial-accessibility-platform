@@ -161,15 +161,6 @@ The API uses the same `DATABASE_URL` as ETL when set, or derives one from
 Click a rendered block-group polygon to inspect that feature's GEOID, score
 components, nearby transit count, service categories, and status flags.
 
-#### Verified browser result
-
-Manual visual verification confirmed that single-clicking different block-group
-polygons changes the selected GEOID and accessibility scores. The captured
-result shows the interactive map, score controls, service toggles, legend, and
-selected-feature detail card:
-
-![Accessibility Explorer browser verification](docs/images/accessibility-explorer.png)
-
 ### PostGIS and ETL (Milestone 2)
 
 Docker Desktop (or another Docker Engine) is required for a live database. Set
