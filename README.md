@@ -10,18 +10,45 @@ stations.
 > remains a planning-screening indicator, not a walking/network result,
 > causal measure, or policy recommendation.
 
-![Verified Accessibility Explorer screenshot](docs/images/accessibility-explorer.png)
+## Screenshots
 
-Post-v0.1.0 evidence from the same local PostGIS/API run:
+### Map overview
 
-- [Map overview with score distribution and legend](docs/images/map-overview.png)
-- [Selected block-group detail view](docs/images/selected-block-group.png)
+![Map overview with score distribution and legend](docs/images/map-overview.png)
+
+County-wide Marion County exploration view with real score-colored block
+groups, OpenStreetMap context, the latest score-distribution chart,
+service-layer controls, and a readable score legend.
+
+### Selected block-group detail
+
+![Selected block-group detail](docs/images/selected-block-group.png)
+
+Click-driven inspection of one real block group, including its GEOID, total,
+transit, and service scores, nearby transit count, service categories, and
+status flags. The selected polygon is visibly highlighted.
+
+### Mobile controls
+
+![Mobile score and service controls](docs/images/mobile-controls.png)
+
+Narrow-browser view demonstrating that score filters, service-layer toggles,
+and the refresh control remain usable at mobile width.
+
+### Mobile map overview
+
+![Mobile map overview](docs/images/mobile-map-overview.png)
+
+Narrow-browser map view showing the responsive score chart, basemap, colored
+block groups, score legend, and local-data status message.
+
+These are real local verification screenshots from the current PostGIS/API
+run, not a hosted deployment claim.
 
 The explorer now shows the latest API score buckets as a compact distribution
 chart. Minimum/maximum score filters and a selected `geoid` are preserved in
 the URL (`?min=0&max=100&geoid=...`), so a filtered or selected view can be
-shared or restored on reload. Screenshots are local verification evidence,
-not a hosted deployment claim.
+shared or restored on reload.
 
 ## Why this project matters
 
