@@ -5,10 +5,10 @@ Indiana neighborhoods have inadequate access to public transit and essential
 services such as hospitals, grocery stores, schools, libraries, and fire
 stations.
 
-> **Current status:** Milestone 6 prepares the completed PostGIS, FastAPI,
-> React/MapLibre, and optional ArcGIS documentation for portfolio release. It
-> remains a planning-screening indicator, not a walking/network result,
-> causal measure, or policy recommendation.
+> **Current status:** v0.1.0 is released. The project is a free, locally
+> runnable PostGIS, FastAPI, and React/MapLibre application with optional ArcGIS
+> documentation. It is a planning-screening indicator, not a walking/network
+> result, causal measure, or policy recommendation.
 
 ## Screenshots
 
@@ -50,33 +50,43 @@ chart. Minimum/maximum score filters and a selected `geoid` are preserved in
 the URL (`?min=0&max=100&geoid=...`), so a filtered or selected view can be
 shared or restored on reload.
 
-## Why this project matters
+## What I built
 
-This portfolio demonstrates how a GIS developer can turn public data into a
-reproducible spatial product: source provenance and validation, projected-CRS
-ETL in PostGIS, transparent accessibility scoring, a tested API, and an
-accessible browser map. It also shows how to document uncertainty instead of
+This project turns public data into a reproducible spatial product:
+
+- A cataloged acquisition layer with cached-source validation and provenance
+- Projected-CRS ETL and transactional loading in PostGIS
+- A transparent proximity score combining transit and essential-service access
+- A tested FastAPI GeoJSON API with score filtering and feature details
+- A responsive React/MapLibre interface with score charts, layer toggles, and
+  click-driven block-group inspection
+
+The methodology is deliberately transparent about uncertainty instead of
 overstating what a proximity screen can prove.
+
+## Technology stack
+
+`Python` · `GeoPandas` · `PostGIS` · `FastAPI` · `React` · `TypeScript` ·
+`MapLibre` · `Docker` · `GitHub Actions`
 
 ## Project question
 
 > Which Marion County neighborhoods have inadequate access to public transit
 > and essential services?
 
-The finished platform will calculate transparent, population-normalized
-accessibility indicators and expose them through a documented API and an
-interactive web map. It will distinguish straight-line proximity from true
-network accessibility and document uncertainty and limitations.
+The delivered baseline exposes transparent accessibility indicators through a
+documented API and interactive web map. It distinguishes straight-line
+proximity from true network accessibility and documents uncertainty and
+limitations.
 
-## Planned architecture
+## Architecture
 
 - **Data and spatial processing:** Python, GeoPandas, Shapely, PyProj, and
   Rasterio where raster analysis is genuinely useful
 - **Spatial storage:** PostgreSQL with PostGIS, run locally with Docker Compose
 - **API:** FastAPI with a versioned HTTP interface
 - **Web client:** React, TypeScript, and a provider-neutral mapping boundary
-- **Web map:** MapLibre for the credential-free local baseline, with an ArcGIS
-  Maps SDK adapter evaluated in Milestone 5
+- **Web map:** MapLibre for the credential-free local baseline
 - **Esri automation:** Optional ArcPy and ArcGIS Pro workflows kept separate
   from the open-source core
 - **Quality:** Pytest, Ruff, mypy, Vitest, Testing Library, ESLint, Prettier,
@@ -299,9 +309,9 @@ small legally redistributable test fixtures are committed instead. OpenStreetMap
 will be used only when an authoritative source is unavailable or when its road
 network is methodologically appropriate and attribution requirements are met.
 
-## Roadmap and acceptance criteria
+## Delivered milestones
 
-| Milestone | Acceptance boundary |
+| Milestone | Delivered capability |
 | --- | --- |
 | **0 — Foundation** | Architecture and risks documented; repository guidance and safe environment template present; installable FastAPI and React foundations; lint, type, test, and build checks pass in CI. No analytical claims. |
 | **1 — Data acquisition** | Nine planned sources cataloged; cached downloads, SHA-256 manifests, format/schema validation, manual fallbacks, and legal fixtures implemented. ACS requires a user-provided key or manual download. |
@@ -316,10 +326,8 @@ network is methodologically appropriate and attribution requirements are met.
 - Data availability, licensing, schemas, and update frequency still require
   re-verification at each retrieval; several public services do not state an
   explicit open-data license.
-- Docker is installed in the initial development environment, but the Docker
-  engine was not responsive during the first inspection; PostGIS support will
-  be validated in Milestone 2.
-- No local `psql` client was detected during the first inspection.
+- The application is documented for local Docker/PostGIS execution; no hosted
+  deployment is claimed.
 - No ArcGIS credentials or licenses are assumed. The open-source core must work
   without them.
 - The selected grocery dataset measures SNAP-authorized retailers rather than a
