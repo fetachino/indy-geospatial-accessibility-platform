@@ -12,6 +12,17 @@ stations.
 
 ![Verified Accessibility Explorer screenshot](docs/images/accessibility-explorer.png)
 
+Post-v0.1.0 evidence from the same local PostGIS/API run:
+
+- [Map overview with score distribution and legend](docs/images/map-overview.png)
+- [Selected block-group detail view](docs/images/selected-block-group.png)
+
+The explorer now shows the latest API score buckets as a compact distribution
+chart. Minimum/maximum score filters and a selected `geoid` are preserved in
+the URL (`?min=0&max=100&geoid=...`), so a filtered or selected view can be
+shared or restored on reload. Screenshots are local verification evidence,
+not a hosted deployment claim.
+
 ## Why this project matters
 
 This portfolio demonstrates how a GIS developer can turn public data into a
