@@ -66,8 +66,15 @@ overstating what a proximity screen can prove.
 
 ## Technology stack
 
-`Python` · `GeoPandas` · `PostGIS` · `FastAPI` · `React` · `TypeScript` ·
-`MapLibre` · `Docker` · `GitHub Actions`
+[![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![GeoPandas](https://img.shields.io/badge/GeoPandas-139C5A?logo=python&logoColor=white)](https://geopandas.org/)
+[![PostGIS](https://img.shields.io/badge/PostGIS-4169E1?logo=postgresql&logoColor=white)](https://postgis.net/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![React](https://img.shields.io/badge/React-20232A?logo=react&logoColor=61DAFB)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![MapLibre](https://img.shields.io/badge/MapLibre-396CB2?logo=maplibre&logoColor=white)](https://maplibre.org/)
+[![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=githubactions&logoColor=white)](https://docs.github.com/en/actions)
 
 ## Project question
 
