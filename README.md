@@ -12,6 +12,17 @@ stations.
 
 ![Verified Accessibility Explorer screenshot](docs/images/accessibility-explorer.png)
 
+Post-v0.1.0 evidence from the same local PostGIS/API run:
+
+- [Map overview with score distribution and legend](docs/images/map-overview.png)
+- [Selected block-group detail view](docs/images/selected-block-group.png)
+
+The explorer now shows the latest API score buckets as a compact distribution
+chart. Minimum/maximum score filters and a selected `geoid` are preserved in
+the URL (`?min=0&max=100&geoid=...`), so a filtered or selected view can be
+shared or restored on reload. Screenshots are local verification evidence,
+not a hosted deployment claim.
+
 ## Why this project matters
 
 This portfolio demonstrates how a GIS developer can turn public data into a
@@ -49,13 +60,13 @@ The rationale and component boundaries are recorded in
 
 ```mermaid
 flowchart LR
-  A[Public sources] --> B[Python acquisition + catalog]
-  B --> C[PostGIS ETL\nEPSG:26916]
-  C --> D[Proximity analysis\nrun + audit]
-  D --> E[FastAPI /api/v1\nWGS84 GeoJSON]
-  E --> F[React + MapLibre\nfilters and click details]
-  C --> G[GeoJSON / CSV exports]
-  G -. optional, account-dependent .-> H[ArcGIS Pro / Online]
+  A["Public sources"] --> B["Python acquisition and catalog"]
+  B --> C["PostGIS ETL<br/>EPSG:26916"]
+  C --> D["Proximity analysis<br/>run and audit"]
+  D --> E["FastAPI /api/v1<br/>WGS84 GeoJSON"]
+  E --> F["React and MapLibre<br/>filters and click details"]
+  C --> G["GeoJSON and CSV exports"]
+  G -. "optional, account-dependent" .-> H["ArcGIS Pro or Online"]
 ```
 
 ## Repository layout
